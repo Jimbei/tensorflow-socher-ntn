@@ -53,9 +53,16 @@ Word embedding vectors may be initialized randomly, but the model benefits stron
 
 Shortly before we picked our project, Google open-sourced TensorFlow, a numerical computing library similar to Theano and Torch, but slightly different in that although it is optimized for neural networks and has plenty of additional helper functions for computations in that domain, it was not only built for Machine Learning. Secondly, it has visual debugging tools (called TensorBoard) built in to it, to visualize learning and diagnose potential bottlenecks.
 
+## Maintainence
 
+### Motivation
 
+For the time being, 12.04.2018. This project currently run under tensorflow 0.5!
+I have not started it yet, but I guess it cannot be compiled successfully.
 
+### Plan
+
+Make it run with the tensorflow 1.7
 
 
 
