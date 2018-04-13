@@ -24,9 +24,11 @@ def inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_
     b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
     U = [tf.Variable(tf.ones([1, k])) for r in range(num_relations)]
     
-    # TODO: Fix bug! - TypeError: Expected binary or unicode string, got <map object at 0x00000222F417F898>
+    # TODO: Fix bug!
+    # Description: TypeError: Expected binary or unicode string, got <map object at 0x00000222F417F898>
+    # Status: unresolved
     print("Calculating ent2word ...")
-    # Debug section
+    # Debug zone
     print('type of entity_to_wordvec: ' + str(type(entity_to_wordvec)))
     print('sample element inside entity_to_wordvec: ' + str(entity_to_wordvec[6]))
     # =========================================================================
