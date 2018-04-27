@@ -1,6 +1,10 @@
 import params
 import scipy.io as sio
 import numpy as np
+import csv
+import random
+import tensorflow as tf
+from tensorflow.python.client import device_lib
 
 
 # TODO: why do we need initEmbed?
@@ -10,19 +14,34 @@ import numpy as np
 def write_words(words):
     file_path = '../data/Wordnet/words.csv'
     
-    with open(file_path, 'w') as writer:
-        pass
-    pass
+    rand_num = random.randint(0, words.shape[1])
+    
+    print('Writing file ...')
+    with open(file_path, 'w', newline='') as f:
+        for i in range(words.shape[1]):
+            writer = csv.writer(f)
+            
+            if rand_num == i:
+                print(words[0][i])
+            
+            writer.writerows([words[0][i]])
+    
+    print('Finish writing words ...')
 
 
-def write_we(we):
-    file_path = '../data/Wordnet/words.csv'
-    pass
+def logging_device_placement():
+    a = tf.constant([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], shape=[3, 2], name='a')
+    b = tf.constant([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], shape=[2, 3], name='b')
+    c = tf.matmul(a, b)
+    
+    sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+    
+    print(sess.run(c))
 
 
-def write_tree(tree):
-    file_path = '../data/Wordnet/words.csv'
-    pass
+def get_list_devices():
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 
 def main():
@@ -36,21 +55,24 @@ def main():
     # =========================================================================
     print('2')
     words = mat_contents['words']  # WTHITS!
+    # write_words(words)
     print('the type of words is ' + str(type(words)))
     print(words.shape)
-    print(words.item(3))
-    print(words.item(4))
-    print(words.item(5))
-    print(words.item(6))
-    print(words.item(7))
-    for i in range(67447):
-        print(words.item(i))
     print('3')
     we = mat_contents['We']  # WTHITS!
+    print('the type of we is ' + str(type(we)))
     print(we.shape)
+    # TODO: sample of we
+    print('sample of we is ' + str(we[6][16]))
+    # =========================================================================
     print('4')
     tree = mat_contents['tree']  # WTHITS!
-    print(tree.shape)
+    print('the type fo tree is ' + str(type(tree)))  # numpy array
+    print(tree.shape)  # (38696, 1)
+    print('sample of tree is ' + str(tree[30000][0][0][0][0][0]))  # [11095 63941]
+    print('sample of tree is ' + str(tree[30000][0]))
+    print('the type of tree[30000][0][0][0][0][0] is ' + str(type(tree[30000][0][0][0][0][0])))
+    print(np.shape(tree[30000][0][0][0][0][0]))
     print('5')
     
     # write_words(words)
@@ -59,19 +81,24 @@ def main():
     
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     print('6')
+    print('the type of word_vecs is ' + str(type(word_vecs)) + ' with length of ' + str(len(word_vecs)))
+    print('sample of word_vecs: ' + str(word_vecs[66]))
+    print('the type of word_vecs[66] is ' + str(type(word_vecs[66])) + ' with length of ' + str(len(word_vecs[66])))
+    # TODO: why do we need map?
+    print('the length of tree is ' + str(len(tree)))
+    # =========================================================================
+    # the length of tree is 38696
     entity_words = [map(int, tree[i][0][0][0][0][0]) for i in range(len(tree))]
     print('7')
-    
+    print('the type of entity_words is ' + str(type(entity_words)) + ' with length of ' + str(len(entity_words)))
+    print('sample of entity_vecs (tra): ' + str(list(entity_words[30000])))
     return word_vecs, entity_words
 
 
 if __name__ == '__main__':
     print('Processing ...')
     # word_vecs, entity_words = main()
-    mymat1 = np.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    mymat2 = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    print('type of mymat1 is ' + str(type(mymat1)))
-    print('type of mymat2 is ' + str(type(mymat2)))
-    print()
+    # logging_device_placement()
+    get_list_devices()
     
     print('Done')

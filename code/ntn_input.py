@@ -6,6 +6,8 @@ import params
 import scipy.io as sio
 import numpy as np
 
+import csv
+
 entities_string = '/entities.txt'
 relations_string = '/relations.txt'
 embeds_string = '/initEmbed.mat'
@@ -45,14 +47,27 @@ def load_embeds(file_path):
     words = mat_contents['words']
     we = mat_contents['We']
     tree = mat_contents['tree']
-    # Debug zone
-    print('type of mat_contents: ' + str(type(mat_contents)))
-    print('type of words: ' + str(type(words)) + ', sample element is ' + words)
-    print('type of we: ' + str(type(we)) + ', sample element is ' + we)
-    print('type of tree: ' + str(type(tree)), ', sample element is ' + tree)
+    # Debug section
+    # print('type of mat_contents: ' + str(type(mat_contents)))
     # =========================================================================
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     entity_words = [map(int, tree[i][0][0][0][0][0]) for i in range(len(tree))]
+    # TODO: write file
+    print('Writing tree.csv file ...')
+    with open('../data/Wordnet/tree.csv', 'w', newline='') as f:
+        for i in range(len(tree)):
+            writer = csv.writer(f)
+            writer.writerow(tree[i][0][0][0][0][0])
+    print('Finish writing tree.csv')
+    
+    print('Writing entity_words.csv ...')
+    with open('../data/Wordnet/entity_words.csv', 'w', newline='') as f:
+        print('type of word_vecs is ' + str(type(entity_words)))
+        for i in range(len(entity_words)):
+            writer = csv.writer(f)
+            writer.writerow(entity_words[i])
+    print('Finish writing entity_words.csv')
+    # =========================================================================
     return word_vecs, entity_words
 
 

@@ -63,6 +63,8 @@ I have not started it yet, but I guess it cannot be compiled successfully.
 ### Plan
 
 Make it run with the tensorflow 1.7
+Configure to run with GPU
+Explain the purpose of initEmbed file
 
 
 

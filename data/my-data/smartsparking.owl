@@ -1,0 +1,555 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.semanticweb.org/ngt1wa3/ontologies/2018/3/smartparking0.0.0"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.semanticweb.org/ngt1wa3/ontologies/2018/3/smartparking0.0.0">
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">A smart parking ontology that describes possible use cases for parking service</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1f6011a6_6004_4cca_86ae_637edf20aac8"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_716881c2_668c_41c4_8d48_ac99b7e81102"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a81cb167_43e7_4c76_8a36_bd44f05632f8"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8e9bfe7c_33be_4a7a_accd_d00eb9d0b01f"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a2cf2836_0509_446a_9c0f_973e64fcc7ec"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a77738e8_6fbc_4fbb_8bfe_b9b1f3540de5"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_aeb845e8_e682_4ba7_9e9a_5ddc98c7fb11"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_6acbc76c_2e0d_4834_baae_9c047e5a5c70"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_ff237feb_579a_47e5_a0cf_59b90228c8f0"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_e8a94384_b0e0_48f1_a731_009be52a7fe2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1e7dd300_944a_43f6_9c30_c4be46b166b7"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2b0c56a_71dc_4fe4_89fd_5811be66de17"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_fcd493de_dbd2_4095_a9e8_f9116462fb2e"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1749fd37_75b7_4bf6_a077_25d0021ed05c"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f9bdad5a_b48e_4f7f_8e4d_3d6f331bea92"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_dfd8a260_4613_4aa7_a506_4a059fe339f2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_bd65464d_d400_44ba_ad65_8a2135bb944b"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_67e9ff30_ae26_4edf_9a37_72be42d10e0d"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a95e0794_77f4_4a31_b08f_aff75a6e15b4"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_404f10ed_db27_4f4a_aaf4_0544c34604d2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_0aca0545_4808_4741_a2a5_58bc6497d687"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_882524ef_cc51_4058_8a2a_9f9e0b4afa54"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_cc905a4e_0225_4bb0_9d5c_a82418671823"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f6ad8c27_02aa_43ef_883c_b867e989e706"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2ab7581_0730_49ff_97ae_eea6ac7e80d9"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_838bbc62_7eab_41c6_9082_7a6db7577e07"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b7417c3d_cef4_46a9_b307_5d0e062d4b6e"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_c7dd5381_80c5_4b34_87ec_796b0b2e4903"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_c634c0b3_38b8_48a6_b720_ad3665673830"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2f0e620f_4884_4faa_9e68_23cf238327ae"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a2555e3b_2ed2_4243_931c_5b4c852cc22a"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_9028be65_b51a_4c44_8934_710b66077dbb"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_59340179_d6f3_4050_956e_66c655fdb3bb"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_54447d28_7a0b_4655_bd51_0094a9d11137"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_943b4f02_0b18_47ea_a820_12a10eb91734"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_0d04706a_9ea5_4bc2_a1cb_ddf70bfce1bf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_07f4d02e_bba5_4d15_9f24_5a05dda1f420"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1d3aa18d_629d_4178_be1d_abf9bbc3382b"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_58bfea3b_ffcc_444a_85a6_b91d4fa21b5f"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_e90f8f86_7273_433d_9e55_c14f4c899211"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_837a5b52_afd6_4de8_b71a_304ebb7d9c2b"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_07f4d02e_bba5_4d15_9f24_5a05dda1f420"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f9bdad5a_b48e_4f7f_8e4d_3d6f331bea92"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_0aca0545_4808_4741_a2a5_58bc6497d687"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_6acbc76c_2e0d_4834_baae_9c047e5a5c70"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_0d04706a_9ea5_4bc2_a1cb_ddf70bfce1bf"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1749fd37_75b7_4bf6_a077_25d0021ed05c"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_6acbc76c_2e0d_4834_baae_9c047e5a5c70"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1d3aa18d_629d_4178_be1d_abf9bbc3382b"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_0aca0545_4808_4741_a2a5_58bc6497d687"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1e7dd300_944a_43f6_9c30_c4be46b166b7"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2ab7581_0730_49ff_97ae_eea6ac7e80d9"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1f6011a6_6004_4cca_86ae_637edf20aac8"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_59340179_d6f3_4050_956e_66c655fdb3bb"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_59340179_d6f3_4050_956e_66c655fdb3bb"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2f0e620f_4884_4faa_9e68_23cf238327ae"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_943b4f02_0b18_47ea_a820_12a10eb91734"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_404f10ed_db27_4f4a_aaf4_0544c34604d2"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f6ad8c27_02aa_43ef_883c_b867e989e706"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_54447d28_7a0b_4655_bd51_0094a9d11137"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1749fd37_75b7_4bf6_a077_25d0021ed05c"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_58bfea3b_ffcc_444a_85a6_b91d4fa21b5f"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f6ad8c27_02aa_43ef_883c_b867e989e706"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_59340179_d6f3_4050_956e_66c655fdb3bb"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_6acbc76c_2e0d_4834_baae_9c047e5a5c70"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_67e9ff30_ae26_4edf_9a37_72be42d10e0d"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_716881c2_668c_41c4_8d48_ac99b7e81102"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2ab7581_0730_49ff_97ae_eea6ac7e80d9"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_837a5b52_afd6_4de8_b71a_304ebb7d9c2b"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_838bbc62_7eab_41c6_9082_7a6db7577e07"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_882524ef_cc51_4058_8a2a_9f9e0b4afa54"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_59340179_d6f3_4050_956e_66c655fdb3bb"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8e9bfe7c_33be_4a7a_accd_d00eb9d0b01f"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_9028be65_b51a_4c44_8934_710b66077dbb"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_943b4f02_0b18_47ea_a820_12a10eb91734"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1749fd37_75b7_4bf6_a077_25d0021ed05c"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a2555e3b_2ed2_4243_931c_5b4c852cc22a"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a2cf2836_0509_446a_9c0f_973e64fcc7ec"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f9bdad5a_b48e_4f7f_8e4d_3d6f331bea92"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a77738e8_6fbc_4fbb_8bfe_b9b1f3540de5"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a81cb167_43e7_4c76_8a36_bd44f05632f8"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_a95e0794_77f4_4a31_b08f_aff75a6e15b4"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_aeb845e8_e682_4ba7_9e9a_5ddc98c7fb11"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f9bdad5a_b48e_4f7f_8e4d_3d6f331bea92"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2b0c56a_71dc_4fe4_89fd_5811be66de17"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_cc905a4e_0225_4bb0_9d5c_a82418671823"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_b7417c3d_cef4_46a9_b307_5d0e062d4b6e"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_bd65464d_d400_44ba_ad65_8a2135bb944b"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_c634c0b3_38b8_48a6_b720_ad3665673830"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_c7dd5381_80c5_4b34_87ec_796b0b2e4903"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_cc905a4e_0225_4bb0_9d5c_a82418671823"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_943b4f02_0b18_47ea_a820_12a10eb91734"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_dfd8a260_4613_4aa7_a506_4a059fe339f2"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_e8a94384_b0e0_48f1_a731_009be52a7fe2"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_e90f8f86_7273_433d_9e55_c14f4c899211"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f6ad8c27_02aa_43ef_883c_b867e989e706"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_0aca0545_4808_4741_a2a5_58bc6497d687"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_f9bdad5a_b48e_4f7f_8e4d_3d6f331bea92"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_943b4f02_0b18_47ea_a820_12a10eb91734"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_fcd493de_dbd2_4095_a9e8_f9116462fb2e"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_ff237feb_579a_47e5_a0cf_59b90228c8f0"/>
+        <Class IRI="http://www.co-ode.org/ontologies/ont.owl#OWLClass_cc905a4e_0225_4bb0_9d5c_a82418671823"/>
+    </SubClassOf>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_07f4d02e_bba5_4d15_9f24_5a05dda1f420</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Kid</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_0aca0545_4808_4741_a2a5_58bc6497d687</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Parking_Lot</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_0d04706a_9ea5_4bc2_a1cb_ddf70bfce1bf</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Heavy_Snow</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_1749fd37_75b7_4bf6_a077_25d0021ed05c</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Device</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_1d3aa18d_629d_4178_be1d_abf9bbc3382b</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Location</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_1e7dd300_944a_43f6_9c30_c4be46b166b7</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">History_Browsing</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_1f6011a6_6004_4cca_86ae_637edf20aac8</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Friday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_1fce63e9_7af5_4335_8d61_0383653921c0</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Day_of_Week</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_2472f642_ca57_4b51_80f3_943661fdfeb6</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Day_Time</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_2f0e620f_4884_4faa_9e68_23cf238327ae</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Sunny</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_399e613e_acb2_4ea6_9b55_f4943f388052</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Destination</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_404f10ed_db27_4f4a_aaf4_0544c34604d2</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Open</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_54447d28_7a0b_4655_bd51_0094a9d11137</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Phone</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_58bfea3b_ffcc_444a_85a6_b91d4fa21b5f</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Close</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_59340179_d6f3_4050_956e_66c655fdb3bb</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Environment</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_67e9ff30_ae26_4edf_9a37_72be42d10e0d</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Evening</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_6acbc76c_2e0d_4834_baae_9c047e5a5c70</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Context</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_716881c2_668c_41c4_8d48_ac99b7e81102</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Job</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_837a5b52_afd6_4de8_b71a_304ebb7d9c2b</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Wednesday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_838bbc62_7eab_41c6_9082_7a6db7577e07</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Home</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_882524ef_cc51_4058_8a2a_9f9e0b4afa54</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Entertainment</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_8c7ad24c_e5a9_4413_a10a_869022124816</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Weather</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_8e9bfe7c_33be_4a7a_accd_d00eb9d0b01f</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Sunday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_9028be65_b51a_4c44_8934_710b66077dbb</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Workplace</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_943b4f02_0b18_47ea_a820_12a10eb91734</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Car</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_a2555e3b_2ed2_4243_931c_5b4c852cc22a</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Night</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_a2cf2836_0509_446a_9c0f_973e64fcc7ec</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">None</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_a77738e8_6fbc_4fbb_8bfe_b9b1f3540de5</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Light_Snow</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_a81cb167_43e7_4c76_8a36_bd44f05632f8</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Morning</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_a95e0794_77f4_4a31_b08f_aff75a6e15b4</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Noon</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_aeb845e8_e682_4ba7_9e9a_5ddc98c7fb11</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Friend</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2ab7581_0730_49ff_97ae_eea6ac7e80d9</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">User</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_b2b0c56a_71dc_4fe4_89fd_5811be66de17</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Low</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_b7417c3d_cef4_46a9_b307_5d0e062d4b6e</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Tuesday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_bd65464d_d400_44ba_ad65_8a2135bb944b</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Rainy</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_c634c0b3_38b8_48a6_b720_ad3665673830</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Saturday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_c7dd5381_80c5_4b34_87ec_796b0b2e4903</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Monday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_cc905a4e_0225_4bb0_9d5c_a82418671823</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Fuel_Level</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_dfd8a260_4613_4aa7_a506_4a059fe339f2</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Thursday</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_e8a94384_b0e0_48f1_a731_009be52a7fe2</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Not_Specified</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_e90f8f86_7273_433d_9e55_c14f4c899211</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Cloudy</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_f6ad8c27_02aa_43ef_883c_b867e989e706</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Status</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_f9bdad5a_b48e_4f7f_8e4d_3d6f331bea92</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Passenger</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_fcd493de_dbd2_4095_a9e8_f9116462fb2e</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Station</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.co-ode.org/ontologies/ont.owl#OWLClass_ff237feb_579a_47e5_a0cf_59b90228c8f0</IRI>
+        <Literal xml:lang="en" datatypeIRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">Enough</Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+

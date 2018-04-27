@@ -2,6 +2,7 @@ import tensorflow as tf
 import params
 import ntn_input
 import random
+import math
 
 
 # Inference
@@ -24,20 +25,36 @@ def inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_
     b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
     U = [tf.Variable(tf.ones([1, k])) for r in range(num_relations)]
     
-    # TODO: Fix bug!
-    # Description: TypeError: Expected binary or unicode string, got <map object at 0x00000222F417F898>
-    # Status: unresolved
+    # TODO: bug00
+    # TypeError: Expected binary or unicode string, got <map object at 0x00000222F417F898>
+    # Status: resolved
+    # =========================================================================
     print("Calculating ent2word ...")
-    # Debug zone
+    # Debug section
     print('type of entity_to_wordvec: ' + str(type(entity_to_wordvec)))
-    print('sample element inside entity_to_wordvec: ' + str(entity_to_wordvec[6]))
+    print('sample element inside entity_to_wordvec: ' + str(list(entity_to_wordvec[6])))
     # =========================================================================
     
     # python list of tf vectors: i -> list of word indices corresponding to entity i
-    ent2word = [tf.constant(entity_i) - 1 for entity_i in entity_to_wordvec]
+    # bug00, modify
+    # ent2word = [tf.constant(entity_i) - 1 for entity_i in entity_to_wordvec]
+    # TODO: need to be assured the usage of list()
+    ent2word = [tf.constant(list(entity_i)) - 1 for entity_i in entity_to_wordvec]
+    # =========================================================================
     # (num_entities, d) matrix where row i corresponds to the entity embedding (word embedding average) of entity i
+    # TODO: bug01
+    # AttributeError: module 'tensorflow' has no attribute 'pack'
+    # Status: unresolved
+    # =========================================================================
     print("Calculating ent_embed ...")
-    ent_embed = tf.pack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
+    # bug01, modify
+    # ent_embed = tf.pack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
+    # Debug section
+    # ent2word is a Tensor
+    # =========================================================================
+    # ent_embed = tf.stack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
+    ent_embed = tf.stack([int(tf.reduce_mean(tf.gather(E, entword), 0)) for entword in ent2word])
+    # =========================================================================
     # ent_embed = tf.truncated_normal([num_entities, d])
     print(ent_embed.get_shape())
     
