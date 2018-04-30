@@ -3,16 +3,18 @@ import scipy.io as sio
 import numpy as np
 import csv
 import random
-import tensorflow as tf
-from tensorflow.python.client import device_lib
+# import tensorflow as tf
+# from tensorflow.python.client import device_lib
 
 
 # TODO: why do we need initEmbed?
+# This is a kind of pre-trained model used for initial step
 # TODO: what is the content of initEmbed?
+# initEmbed is a dictionary stores initial information for training
 
 
 def write_words(words):
-    file_path = '../data/Wordnet/words.csv'
+    file_path = '../data/Wordnet/additionalFiles/words.csv'
     
     rand_num = random.randint(0, words.shape[1])
     
@@ -95,10 +97,26 @@ def main():
     return word_vecs, entity_words
 
 
+def read_file():
+    print('Loading data ...')
+    entity_words = []
+    with open('../data/Wordnet/additionalFiles/entity_words.csv', newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            entity_words.append(row)
+            
+    entity_words = [map(int, row) for row in entity_words]
+    print('Loading is complete!')
+    
+    print('100th element is ' + str(entity_words[99]))
+    print('100th element is ' + str(list(entity_words[99])))
+
+
 if __name__ == '__main__':
     print('Processing ...')
     # word_vecs, entity_words = main()
     # logging_device_placement()
-    get_list_devices()
+    # get_list_devices()
+    read_file()
     
     print('Done')

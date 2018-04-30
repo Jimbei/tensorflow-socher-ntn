@@ -50,7 +50,7 @@ def run_training():
     # python list of (e1, R, e2) for entire training set in index form
     indexed_training_data = data_to_indexed(raw_training_data, entities_list, relations_list)
     print("Load embeddings...")
-    init_word_embeds, entity_to_wordvec = ntn_input.load_init_embeds(params.data_path)
+    word_vecs, entity_words = ntn_input.load_init_embeds(params.data_path)
     
     num_entities = len(entities_list)
     num_relations = len(relations_list)
@@ -68,7 +68,7 @@ def run_training():
                               range(num_relations)]
         
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-        inference = ntn.inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_to_wordvec, \
+        inference = ntn.inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
                                   num_entities, num_relations, slice_size, batch_size, False, label_placeholders)
         loss = ntn.loss(inference, params.regularization)
         training = ntn.training(loss, params.learning_rate)
@@ -98,7 +98,8 @@ def run_training():
 def main(argv):
     # TODO: Where is the place to load data
     # TODO: Where is the place for embeddings
-    # TODO: How does the training code look like?
+    # TODO: identify the training code
+    # in ntn.py, the function inference()
     # TODO: Change the parameter in params.py
     run_training()
 

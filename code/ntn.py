@@ -10,7 +10,7 @@ import math
 # Training
 
 # returns a (batch_size*corrupt_size, 2) vector corresponding to [g(T^i), g(T_c^i)] for all i
-def inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_to_wordvec, \
+def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
               num_entities, num_relations, slice_size, batch_size, is_eval, label_placeholders):
     print("Beginning building inference:")
     # TODO: Check the shapes and axes used here!
@@ -18,8 +18,8 @@ def inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_
     d = 100  # embed_size
     k = slice_size
     ten_k = tf.constant([k])
-    num_words = len(init_word_embeds)
-    E = tf.Variable(init_word_embeds)  # d=embed size
+    num_words = len(word_vecs)
+    E = tf.Variable(word_vecs)  # d=embed size
     W = [tf.Variable(tf.truncated_normal([d, d, k])) for r in range(num_relations)]
     V = [tf.Variable(tf.zeros([k, 2 * d])) for r in range(num_relations)]
     b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
@@ -31,15 +31,19 @@ def inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_
     # =========================================================================
     print("Calculating ent2word ...")
     # Debug section
-    print('type of entity_to_wordvec: ' + str(type(entity_to_wordvec)))
-    print('sample element inside entity_to_wordvec: ' + str(list(entity_to_wordvec[6])))
+    print('type of word_vecs is ' + str(type(word_vecs)))
+    # type of word_vecs is <class 'list'>
+    print('type of entity_words is  ' + str(type(entity_words)))
+    # type of entity_words is  <class 'list'>
+    print('sample element inside entity_words: ' + str(list(entity_words[6])))
+    exit('at here')
     # =========================================================================
     
     # python list of tf vectors: i -> list of word indices corresponding to entity i
     # bug00, modify
-    # ent2word = [tf.constant(entity_i) - 1 for entity_i in entity_to_wordvec]
+    # ent2word = [tf.constant(entity_i) - 1 for entity_i in entity_words]
     # TODO: need to be assured the usage of list()
-    ent2word = [tf.constant(list(entity_i)) - 1 for entity_i in entity_to_wordvec]
+    ent2word = [tf.constant(list(entity_i)) - 1 for entity_i in entity_words]
     # =========================================================================
     # (num_entities, d) matrix where row i corresponds to the entity embedding (word embedding average) of entity i
     # TODO: bug01
