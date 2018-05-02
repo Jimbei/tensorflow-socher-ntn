@@ -19,7 +19,8 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     k = slice_size
     ten_k = tf.constant([k])
     num_words = len(word_vecs)
-    E = tf.Variable(word_vecs)  # d=embed size
+    # TODO: does wordvecs need to change to list?
+    E = tf.Variable(word_vecs)  # create a variable with initial values from wordvecs
     W = [tf.Variable(tf.truncated_normal([d, d, k])) for r in range(num_relations)]
     V = [tf.Variable(tf.zeros([k, 2 * d])) for r in range(num_relations)]
     b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
@@ -31,18 +32,17 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     # =========================================================================
     print("Calculating ent2word ...")
     # Debug section
-    print('type of word_vecs is ' + str(type(word_vecs)))
-    # type of word_vecs is <class 'list'>
-    print('type of entity_words is  ' + str(type(entity_words)))
-    # type of entity_words is  <class 'list'>
-    print('sample element inside entity_words: ' + str(list(entity_words[6])))
+    print('type of wordvecs is ' + str(type(word_vecs)))
+    # type of wordvecs is <class 'list'>
+    print('type of indices is  ' + str(type(entity_words)))
+    # type of indices is  <class 'list'>
+    print('sample element inside indices: ' + str(list(entity_words[6])))
     exit('at here')
     # =========================================================================
     
     # python list of tf vectors: i -> list of word indices corresponding to entity i
     # bug00, modify
-    # ent2word = [tf.constant(entity_i) - 1 for entity_i in entity_words]
-    # TODO: need to be assured the usage of list()
+    # ent2word = [tf.constant(entity_i) - 1 for entity_i in indices]
     ent2word = [tf.constant(list(entity_i)) - 1 for entity_i in entity_words]
     # =========================================================================
     # (num_entities, d) matrix where row i corresponds to the entity embedding (word embedding average) of entity i
@@ -56,8 +56,8 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     # Debug section
     # ent2word is a Tensor
     # =========================================================================
-    # ent_embed = tf.stack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
-    ent_embed = tf.stack([int(tf.reduce_mean(tf.gather(E, entword), 0)) for entword in ent2word])
+    ent_embed = tf.stack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
+    # ent_embed = tf.stack([int(tf.reduce_mean(tf.gather(E, entword), 0)) for entword in ent2word])
     # =========================================================================
     # ent_embed = tf.truncated_normal([num_entities, d])
     print(ent_embed.get_shape())

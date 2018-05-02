@@ -3,7 +3,9 @@ import scipy.io as sio
 import numpy as np
 import csv
 import random
-# import tensorflow as tf
+import tensorflow as tf
+
+
 # from tensorflow.python.client import device_lib
 
 
@@ -83,16 +85,16 @@ def main():
     
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     print('6')
-    print('the type of word_vecs is ' + str(type(word_vecs)) + ' with length of ' + str(len(word_vecs)))
-    print('sample of word_vecs: ' + str(word_vecs[66]))
-    print('the type of word_vecs[66] is ' + str(type(word_vecs[66])) + ' with length of ' + str(len(word_vecs[66])))
+    print('the type of wordvecs is ' + str(type(word_vecs)) + ' with length of ' + str(len(word_vecs)))
+    print('sample of wordvecs: ' + str(word_vecs[66]))
+    print('the type of wordvecs[66] is ' + str(type(word_vecs[66])) + ' with length of ' + str(len(word_vecs[66])))
     # TODO: why do we need map?
     print('the length of tree is ' + str(len(tree)))
     # =========================================================================
     # the length of tree is 38696
     entity_words = [map(int, tree[i][0][0][0][0][0]) for i in range(len(tree))]
     print('7')
-    print('the type of entity_words is ' + str(type(entity_words)) + ' with length of ' + str(len(entity_words)))
+    print('the type of indices is ' + str(type(entity_words)) + ' with length of ' + str(len(entity_words)))
     print('sample of entity_vecs (tra): ' + str(list(entity_words[30000])))
     return word_vecs, entity_words
 
@@ -100,11 +102,11 @@ def main():
 def read_file():
     print('Loading data ...')
     entity_words = []
-    with open('../data/Wordnet/additionalFiles/entity_words.csv', newline='') as f:
+    with open('../data/Wordnet/additionalFiles/indices.csv', newline='') as f:
         reader = csv.reader(f)
         for row in reader:
             entity_words.append(row)
-            
+    
     entity_words = [map(int, row) for row in entity_words]
     print('Loading is complete!')
     
@@ -113,10 +115,34 @@ def read_file():
 
 
 if __name__ == '__main__':
-    print('Processing ...')
-    # word_vecs, entity_words = main()
-    # logging_device_placement()
-    # get_list_devices()
-    read_file()
+    print('Hello World\n')
+    # loading indices
+    indices = []
+    with open('../data/Wordnet/additionalFiles/indices.csv', 'r', newline='') as f:
+        content = csv.reader(f)
+        indices = [list(map(int, row)) for row in content]
+    print('Finish loading indices.csv\n')
     
-    print('Done')
+    # loading wordvecs
+    wordvecs = []
+    with open('../data/Wordnet/additionalFiles/wordvecs.csv', 'r', newline='') as f:
+        content = csv.reader(f)
+        wordvecs = [list(map(float, row)) for row in content]
+    print('Finish loading wordvecs.csv\n')
+    
+    # print('sample of indices is ' + str(indices[len(indices) - 1]))
+    # print('sample of wordvecs is ' + str(wordvecs[len(wordvecs) - 1]))
+    
+    # defining graph
+    print('Defining graph')
+    ten_variables = tf.Variable(wordvecs, name='my_variable')
+    ten_indices = [tf.constant(e) for e in indices]
+    ten_wordvecs = tf.stack([tf.reduce_mean(tf.gather(ten_variables, index) for index in ten_indices)])
+    exit()
+    
+    print('Running graph')
+    # running graph
+    with tf.Session() as sess:
+        print(sess.run(ten_wordvecs))
+    
+    exit('Terminated')
