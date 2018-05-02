@@ -32,12 +32,11 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     # =========================================================================
     print("Calculating ent2word ...")
     # Debug section
-    print('type of wordvecs is ' + str(type(word_vecs)))
-    # type of wordvecs is <class 'list'>
-    print('type of indices is  ' + str(type(entity_words)))
-    # type of indices is  <class 'list'>
-    print('sample element inside indices: ' + str(list(entity_words[6])))
-    exit('at here')
+    # print('type of wordvecs is ' + str(type(word_vecs)))
+    # # type of wordvecs is <class 'list'>
+    # print('type of indices is  ' + str(type(entity_words)))
+    # # type of indices is  <class 'list'>
+    # print('sample element inside indices: ' + str(list(entity_words[6])))
     # =========================================================================
     
     # python list of tf vectors: i -> list of word indices corresponding to entity i

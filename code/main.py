@@ -137,12 +137,12 @@ if __name__ == '__main__':
     print('Defining graph')
     ten_variables = tf.Variable(wordvecs, name='my_variable')
     ten_indices = [tf.constant(e) for e in indices]
-    ten_wordvecs = tf.stack([tf.reduce_mean(tf.gather(ten_variables, index) for index in ten_indices)])
-    exit()
+    ten_wordvecs = tf.stack([tf.reduce_mean(tf.gather(ten_variables, index)) for index in ten_indices])
     
     print('Running graph')
     # running graph
     with tf.Session() as sess:
-        print(sess.run(ten_wordvecs))
+        sess.run(tf.global_variables_initializer())
+        print(ten_wordvecs.eval())
     
     exit('Terminated')

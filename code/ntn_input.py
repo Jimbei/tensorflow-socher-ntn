@@ -64,13 +64,12 @@ def load_embeds(file_path):
     # # len(words[0]) == 67447
     # # len(we) == 100 && len(we[i]) == 67447
     # TODO: write files
-    print('Writing wordvecs.csv ...')
-    with open('../data/Wordnet/additionalFiles/wordvecs.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        for e in word_vecs:
-            writer.writerow(e)
-    print('Finish writing wordvecs.csv')
-    exit()
+    # print('Writing wordvecs.csv ...')
+    # with open('../data/Wordnet/additionalFiles/wordvecs.csv', 'w', newline='') as f:
+    #     writer = csv.writer(f)
+    #     for e in word_vecs:
+    #         writer.writerow(e)
+    # print('Finish writing wordvecs.csv')
     # print('Writing tree.csv file ...')
     # with open('../data/Wordnet/additionalFiles/tree.csv', 'w', newline='') as f:
     #     print('type of tree is ' + str(type(tree)))
