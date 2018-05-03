@@ -44,12 +44,13 @@ def run_training():
     # python list of (e1, R, e2) for entire training set in string form
     print("Load training data...")
     raw_training_data = ntn_input.load_training_data(params.data_path)
-    print("Load entities and relations...")
+    print("Load entities ...")
     entities_list = ntn_input.load_entities(params.data_path)
+    print('Load relations ...')
     relations_list = ntn_input.load_relations(params.data_path)
     # python list of (e1, R, e2) for entire training set in index form
     indexed_training_data = data_to_indexed(raw_training_data, entities_list, relations_list)
-    print("Load embeddings...")
+    print("Load initial embeddings...")
     word_vecs, entity_words = ntn_input.load_init_embeds(params.data_path)
     
     num_entities = len(entities_list)

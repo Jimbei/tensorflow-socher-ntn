@@ -64,6 +64,11 @@ def load_embeds(file_path):
     # # len(words[0]) == 67447
     # # len(we) == 100 && len(we[i]) == 67447
     # TODO: write files
+    # with open('../data/Wordnet/additionalFiles/words.csv', 'w', newline='') as f:
+    #     writer = csv.writer(f)
+    #     for word in words[0]:
+    #         writer.writerow(word)
+    #
     # print('Writing wordvecs.csv ...')
     # with open('../data/Wordnet/additionalFiles/wordvecs.csv', 'w', newline='') as f:
     #     writer = csv.writer(f)
@@ -81,16 +86,15 @@ def load_embeds(file_path):
     # print('Finish writing tree.csv')
     #
     # print('Writing indices.csv ...')
-    # with open('../data/Wordnet/additionalFiles/indices.csv', 'w', newline='') as f:
+    # with open('../data/Wordnet/additionalFiles/entity_words.csv', 'w', newline='') as f:
     #     print('type of indices is ' + str(type(indices)))
     #     # type of indices is <class 'list'>
     #     np_entity_words = np.array(indices)
     #     print('dimension of indices is ' + str(np_entity_words.shape))
-    #     for i in range(len(indices)):
+    #     for i in range(len(entity_words)):
     #         writer = csv.writer(f)
-    #         writer.writerow(indices[i])
+    #         writer.writerow(list(entity_words[i]))
     # print('Finish writing indices.csv')
-    #
     # print('type of wordvecs is ' + str(type(wordvecs)))
     # np_word_vecs = np.array(wordvecs)
     # print('dimension of wordvecs is ' + str(np_word_vecs.shape))
