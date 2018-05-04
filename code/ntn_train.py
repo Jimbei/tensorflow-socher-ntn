@@ -69,10 +69,19 @@ def run_training():
                               range(num_relations)]
         
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
+        
+        # ====  Build Model ====
         inference = ntn.inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
                                   num_entities, num_relations, slice_size, batch_size, False, label_placeholders)
+        # =====================================================================
+        
+        # ==== Define loss function ====
         loss = ntn.loss(inference, params.regularization)
+        # =====================================================================
+        
+        # ==== Define training algorithm ====
         training = ntn.training(loss, params.learning_rate)
+        # =====================================================================
         
         # Create a session for running Ops on the Graph.
         sess = tf.Session()

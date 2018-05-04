@@ -20,7 +20,7 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     ten_k = tf.constant([k])
     num_words = len(word_vecs)
     # TODO: does wordvecs need to change to list?
-    E = tf.Variable(word_vecs)  # create a variable with initial values from wordvecs
+    par_E = tf.Variable(word_vecs)  # create a variable with initial values from wordvecs
     W = [tf.Variable(tf.truncated_normal([d, d, k])) for r in range(num_relations)]
     V = [tf.Variable(tf.zeros([k, 2 * d])) for r in range(num_relations)]
     b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
@@ -47,7 +47,7 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     # (num_entities, d) matrix where row i corresponds to the entity embedding (word embedding average) of entity i
     # TODO: bug01
     # AttributeError: module 'tensorflow' has no attribute 'pack'
-    # Status: unresolved
+    # Status: resolved
     # =========================================================================
     print("Calculating ent_embed ...")
     # bug01, modify
@@ -55,7 +55,7 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
     # Debug section
     # ent2word is a Tensor
     # =========================================================================
-    ent_embed = tf.stack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
+    ent_embed = tf.stack([tf.reduce_mean(tf.gather(par_E, entword), 0) for entword in ent2word])
     # ent_embed = tf.stack([int(tf.reduce_mean(tf.gather(E, entword), 0)) for entword in ent2word])
     # =========================================================================
     # ent_embed = tf.truncated_normal([num_entities, d])
