@@ -15,16 +15,15 @@ import utils
 
 
 def lab():
-    batch_placeholders = [tf.placeholder(tf.int32, shape=(None, 3), name='batch_' + str(i)) for i in
-                          range(11)]
-    a = tf.constant([1, 2, 3], name='constant_a', dtype=tf.int32)
-    b = tf.constant([4, 5, 6], name='constant_b', dtype=tf.int32)
-    c = tf.split(1, 3)
-    
+    a = tf.constant([1, 2, 3], name='const_a', dtype=tf.int32)
+    b = tf.constant([4, 5, 6], name='const_b', dtype=tf.int32)
+    t = tf.constant([[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]])
+    c = tf.add(a, b)
+    shape_t = tf.shape(t)
+
     with tf.Session() as sess:
-        print(a.eval())
-        print(b.eval())
-        print(c.eval())
+        print(sess.run(c))
+        print(shape_t.eval())
 
 
 def load_data(path_file, datatype=1):
@@ -71,6 +70,7 @@ def inference():
     U = [tf.Variable(tf.ones([1, slice_size])) for i in range(num_relations)]
     
     for r in range(num_relations):
+        e1, e2, e3 = tf.split(1, 3, tf.cast(batch_placeholders[r], tf.int32))
         e1v = tf.transpose(tf.squeeze(tf.gather(ten_wordvecs, e1, name='e1v' + str(r)), [1]))
         e2v = tf.transpose(tf.squeeze(tf.gather(ten_wordvecs, e2, name='e2v' + str(r)), [1]))
         e3v = tf.transpose(tf.squeeze(tf.gather(ten_wordvecs, e3, name='e3v' + str(r)), [1]))

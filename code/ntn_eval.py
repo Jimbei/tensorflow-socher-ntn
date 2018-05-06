@@ -52,8 +52,8 @@ def run_evaluation():
         batch_placeholders = [tf.placeholder(tf.float32, shape=(None, 3)) for i in range(num_relations)]
         label_placeholders = [tf.placeholder(tf.float32, shape=(None, 1)) for i in range(num_relations)]
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))
-        inference = ntn.inference(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_to_wordvec, \
-                                  num_entities, num_relations, slice_size, batch_size, True, label_placeholders)
+        inference = ntn.g_function(batch_placeholders, corrupt_placeholder, init_word_embeds, entity_to_wordvec, \
+                                   num_entities, num_relations, slice_size, batch_size, True, label_placeholders)
         eval_correct = ntn.eval(inference)
         saver = tf.train.Saver()
         
@@ -99,8 +99,8 @@ def get_thresholds():
     
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-    predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
-                                     num_entities, num_relations, slice_size, batch_size)
+    predictions_list = ntn.g_function(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
+                                      num_entities, num_relations, slice_size, batch_size)
     
     min_score = tf.reduce_min(predictions_list)
     max_score = tf.reduce_max(predictions_list)
@@ -148,8 +148,8 @@ def getPredictions():
     
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-    predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
-                                     num_entities, num_relations, slice_size, batch_size)
+    predictions_list = ntn.g_function(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
+                                      num_entities, num_relations, slice_size, batch_size)
     
     predictions = tf.zeros((test_data.shape[0], 1))
     for i in range(test_data.shape[0]):

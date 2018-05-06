@@ -5,66 +5,40 @@ import random
 import math
 
 
-# Inference
-# Loss
-# Training
-
-# returns a (batch_size*corrupt_size, 2) vector corresponding to [g(T^i), g(T_c^i)] for all i
-def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
-              num_entities, num_relations, slice_size, batch_size, is_eval, label_placeholders):
-    print("Beginning building inference:")
+def g_function(batch_placeholders,
+               corrupt_placeholder,
+               word_vecs,
+               entity_words,
+               num_entities,
+               num_relations,
+               slice_size,
+               batch_size,
+               is_eval,
+               label_placeholders):
+    print("Beginning building g function:")
     # TODO: Check the shapes and axes used here!
     print("Creating variables")
-    d = 100  # embed_size
+    d = 100  # embedding_size
     k = slice_size
     ten_k = tf.constant([k])
     num_words = len(word_vecs)
     # TODO: does wordvecs need to change to list?
-    par_E = tf.Variable(word_vecs)  # create a variable with initial values from wordvecs
-    W = [tf.Variable(tf.truncated_normal([d, d, k])) for r in range(num_relations)]
-    V = [tf.Variable(tf.zeros([k, 2 * d])) for r in range(num_relations)]
-    b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
-    U = [tf.Variable(tf.ones([1, k])) for r in range(num_relations)]
-    
-    # TODO: bug00
-    # TypeError: Expected binary or unicode string, got <map object at 0x00000222F417F898>
-    # Status: resolved
-    # =========================================================================
+    var_E = tf.Variable(word_vecs)  # create a variable with initial values from wordvecs
+    var_W = [tf.Variable(tf.truncated_normal([d, d, k])) for r in range(num_relations)]
+    var_V = [tf.Variable(tf.zeros([k, 2 * d])) for r in range(num_relations)]
+    var_b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
+    var_U = [tf.Variable(tf.ones([1, k])) for r in range(num_relations)]
+
     print("Calculating ent2word ...")
-    # Debug section
-    # print('type of wordvecs is ' + str(type(word_vecs)))
-    # # type of wordvecs is <class 'list'>
-    # print('type of indices is  ' + str(type(entity_words)))
-    # # type of indices is  <class 'list'>
-    # print('sample element inside indices: ' + str(list(entity_words[6])))
-    # =========================================================================
-    
-    # python list of tf vectors: i -> list of word indices corresponding to entity i
-    # bug00, modify
-    # ent2word = [tf.constant(entity_i) - 1 for entity_i in indices]
     ent2word = [tf.constant(list(entity_i)) - 1 for entity_i in entity_words]
-    # =========================================================================
-    # (num_entities, d) matrix where row i corresponds to the entity embedding (word embedding average) of entity i
-    # TODO: bug01
-    # AttributeError: module 'tensorflow' has no attribute 'pack'
-    # Status: resolved
-    # =========================================================================
+
     print("Calculating ent_embed ...")
-    # bug01, modify
-    # ent_embed = tf.pack([tf.reduce_mean(tf.gather(E, entword), 0) for entword in ent2word])
-    # Debug section
-    # ent2word is a Tensor
-    # =========================================================================
-    ent_embed = tf.stack([tf.reduce_mean(tf.gather(par_E, entword), 0) for entword in ent2word])
-    # ent_embed = tf.stack([int(tf.reduce_mean(tf.gather(E, entword), 0)) for entword in ent2word])
-    # =========================================================================
-    # ent_embed = tf.truncated_normal([num_entities, d])
-    print(ent_embed.get_shape())
-    
+    ent_embed = tf.stack([tf.reduce_mean(tf.gather(var_E, entword), 0) for entword in ent2word])
+
     predictions = list()
     print("Beginning relations loop")
     for r in range(num_relations):
-        print("Relations loop " + str(r))
+        print("#relations: " + str(r))
         # TODO: should the split dimension be 0 or 1?
         e1, e2, e3 = tf.split(1, 3, tf.cast(batch_placeholders[r], tf.int32))
         e1v = tf.transpose(tf.squeeze(tf.gather(ent_embed, e1, name='e1v' + str(r)), [1]))
@@ -77,43 +51,40 @@ def inference(batch_placeholders, corrupt_placeholder, word_vecs, entity_words,
         num_rel_r = tf.expand_dims(tf.shape(e1v_pos)[1], 0)
         preactivation_pos = list()
         preactivation_neg = list()
-        
+
         # print("e1v_pos: "+str(e1v_pos.get_shape()))
         # print("W[r][:,:,slice]: "+str(W[r][:,:,0].get_shape()))
         # print("e2v_pos: "+str(e2v_pos.get_shape()))
-        
+
         # print("Starting preactivation funcs")
         for slice_ in range(k):
-            preactivation_pos.append(tf.reduce_sum(e1v_pos * tf.matmul(W[r][:, :, slice_], e2v_pos), 0))
-            preactivation_neg.append(tf.reduce_sum(e1v_neg * tf.matmul(W[r][:, :, slice_], e2v_neg), 0))
-        
-        preactivation_pos = tf.pack(preactivation_pos)
-        preactivation_neg = tf.pack(preactivation_neg)
-        
-        temp2_pos = tf.matmul(V[r], tf.concat(0, [e1v_pos, e2v_pos]))
-        temp2_neg = tf.matmul(V[r], tf.concat(0, [e1v_neg, e2v_neg]))
-        
+            preactivation_pos.append(tf.reduce_sum(e1v_pos * tf.matmul(var_W[r][:, :, slice_], e2v_pos), 0))
+            preactivation_neg.append(tf.reduce_sum(e1v_neg * tf.matmul(var_W[r][:, :, slice_], e2v_neg), 0))
+
+        preactivation_pos = tf.stack(preactivation_pos)
+        preactivation_neg = tf.stack(preactivation_neg)
+
+        temp2_pos = tf.matmul(var_V[r], tf.concat(0, [e1v_pos, e2v_pos]))
+        temp2_neg = tf.matmul(var_V[r], tf.concat(0, [e1v_neg, e2v_neg]))
+
         # print("   temp2_pos: "+str(temp2_pos.get_shape()))
-        preactivation_pos = preactivation_pos + temp2_pos + b[r]
-        preactivation_neg = preactivation_neg + temp2_neg + b[r]
-        
+        preactivation_pos = preactivation_pos + temp2_pos + var_b[r]
+        preactivation_neg = preactivation_neg + temp2_neg + var_b[r]
+
         # print("Starting activation funcs")
         activation_pos = tf.tanh(preactivation_pos)
         activation_neg = tf.tanh(preactivation_neg)
-        
-        score_pos = tf.reshape(tf.matmul(U[r], activation_pos), num_rel_r)
-        score_neg = tf.reshape(tf.matmul(U[r], activation_neg), num_rel_r)
+
+        score_pos = tf.reshape(tf.matmul(var_U[r], activation_pos), num_rel_r)
+        score_neg = tf.reshape(tf.matmul(var_U[r], activation_neg), num_rel_r)
         # print("score_pos: "+str(score_pos.get_shape()))
         if not is_eval:
-            predictions.append(tf.pack([score_pos, score_neg]))
+            predictions.append(tf.stack([score_pos, score_neg]))
         else:
-            predictions.append(tf.pack([score_pos, tf.reshape(label_placeholders[r], num_rel_r)]))
-        # print("score_pos_and_neg: "+str(predictions[r].get_shape()))
-    
-    # print("Concating predictions")
+            predictions.append(tf.stack([score_pos, tf.reshape(label_placeholders[r], num_rel_r)]))
+
     predictions = tf.concat(1, predictions)
-    # print(predictions.get_shape())
-    
+
     return predictions
 
 
@@ -121,17 +92,17 @@ def loss(predictions, regularization):
     print("Beginning building loss")
     temp1 = tf.maximum(tf.sub(predictions[1, :], predictions[0, :]) + 1, 0)
     temp1 = tf.reduce_sum(temp1)
-    
+
     temp2 = tf.sqrt(sum([tf.reduce_sum(tf.square(var)) for var in tf.trainable_variables()]))
-    
+
     temp = temp1 + (regularization * temp2)
-    
+
     return temp
 
 
 def training(loss, learningRate):
     print("Beginning building training")
-    
+
     return tf.train.AdagradOptimizer(learningRate).minimize(loss)
 
 
