@@ -8,14 +8,14 @@ import math
 def g_function(batch_placeholders,
                corrupt_placeholder,
                word_vecs,
-               entity_words,
+               entity_indices,
                num_entities,
                num_relations,
                slice_size,
                batch_size,
                is_eval,
                label_placeholders):
-    print("Beginning building g function:")
+    print("Begin building g function:")
     # TODO: Check the shapes and axes used here!
     print("Creating variables")
     d = 100  # embedding_size
@@ -29,11 +29,13 @@ def g_function(batch_placeholders,
     var_b = [tf.Variable(tf.zeros([k, 1])) for r in range(num_relations)]
     var_U = [tf.Variable(tf.ones([1, k])) for r in range(num_relations)]
 
-    print("Calculating ent2word ...")
-    ent2word = [tf.constant(list(entity_i)) - 1 for entity_i in entity_words]
+    print("Convert entity_indices to tensor_entity_indices ...")
+    entity_indices = random.sample(entity_indices, 600)
+    tensor_entity_indices = [tf.constant(entity_i, tf.int32) - 1 for entity_i in entity_indices]
 
-    print("Calculating ent_embed ...")
-    ent_embed = tf.stack([tf.reduce_mean(tf.gather(var_E, entword), 0) for entword in ent2word])
+    print("Calculate tensor_embedding_entity ...")
+    tensor_embedding_entity = tf.stack([tf.reduce_mean(tf.gather(var_E, ei), 0)
+                                        for ei in tensor_entity_indices])
 
     predictions = list()
     print("Beginning relations loop")
@@ -41,9 +43,11 @@ def g_function(batch_placeholders,
         print("#relations: " + str(r))
         # TODO: should the split dimension be 0 or 1?
         e1, e2, e3 = tf.split(1, 3, tf.cast(batch_placeholders[r], tf.int32))
-        e1v = tf.transpose(tf.squeeze(tf.gather(ent_embed, e1, name='e1v' + str(r)), [1]))
-        e2v = tf.transpose(tf.squeeze(tf.gather(ent_embed, e2, name='e2v' + str(r)), [1]))
-        e3v = tf.transpose(tf.squeeze(tf.gather(ent_embed, e3, name='e3v' + str(r)), [1]))
+        e1v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e1, name='e1v' + str(r)), [1]))
+        e2v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e2, name='e2v' + str(r)), [1]))
+        e3v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e3, name='e3v' + str(r)), [1]))
+        exit()
+        
         e1v_pos = e1v
         e2v_pos = e2v
         e1v_neg = e1v

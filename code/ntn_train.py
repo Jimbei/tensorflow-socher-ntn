@@ -40,7 +40,7 @@ def generate_corrupting_data(corrupting_data_size, indexed_training_data, num_en
     # generate a `list of random indices` of training data
     random_indices = random.sample(range(len(indexed_training_data)), corrupting_data_size)
 
-    # fill in the batch
+    # fill in the list
     indexed_corrupting_data = [(indexed_training_data[i][0],
                                 indexed_training_data[i][1],
                                 indexed_training_data[i][2],
@@ -84,7 +84,7 @@ def run_training():
     print('Indexing training data ...')
     indexing_training_data = index_training_data(raw_training_data, entities_list, relations_list)
     print("Load initial embedding parameters ...")
-    word_vecs, entity_words = ntn_input.load_init_embeds(params.data_path)
+    word_vecs, entity_indices = ntn_input.load_init_embeds(params.data_path)
 
     num_entities = len(entities_list)
     num_relations = len(relations_list)
@@ -107,7 +107,7 @@ def run_training():
         prediction_values = ntn.g_function(batch_placeholders,
                                            corrupt_placeholder,
                                            word_vecs,
-                                           entity_words,
+                                           entity_indices,
                                            num_entities,
                                            num_relations,
                                            slice_size,

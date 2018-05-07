@@ -15,15 +15,29 @@ import utils
 
 
 def lab():
-    a = tf.constant([1, 2, 3], name='const_a', dtype=tf.int32)
-    b = tf.constant([4, 5, 6], name='const_b', dtype=tf.int32)
-    t = tf.constant([[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]])
-    c = tf.add(a, b)
-    shape_t = tf.shape(t)
+    sess = tf.Session()
+    tensor_a = tf.convert_to_tensor(np.array([[1001, 1002, 1003], [3, 4, 5]]), dtype=tf.float32)
+    tensor_b = tf.convert_to_tensor([1, 2, 3], dtype=tf.float32)
+    tensor_c = tf.constant([1, 2, 3], dtype=tf.float32)
+    tensor_e = tf.constant([[[1, 2, 3], [6, 7, 8]]])
 
-    with tf.Session() as sess:
-        print(sess.run(c))
-        print(shape_t.eval())
+    tensor_d = tf.squeeze(tensor_e, [1])
+
+    sess.run(tensor_a)
+    sess.run(tensor_b)
+    sess.run(tensor_c)
+    sess.run(tensor_e)
+    sess.run(tensor_d)
+    
+    tensor_a_shape = tensor_a.get_shape()
+    tensor_b_shape = tensor_b.get_shape()
+    tensor_c_shape = tensor_c.get_shape()
+    tensor_e_shape = tensor_e.get_shape()
+    print(tensor_a_shape)
+    print(tensor_b_shape)
+    print(tensor_c_shape)
+    print(tensor_e_shape)
+    print(tensor_d)
 
 
 def load_data(path_file, datatype=1):
