@@ -5,7 +5,8 @@ import random
 import math
 
 
-def g_function(batch_placeholders,
+def g_function(data_placeholders,  # shape == (None, 3)
+                                   # there're 11 batches correspondent to 11 relations
                corrupt_placeholder,
                word_vecs,
                entity_indices,
@@ -15,6 +16,20 @@ def g_function(batch_placeholders,
                batch_size,
                is_eval,
                label_placeholders):
+    """
+
+    :param data_placeholders:
+    :param corrupt_placeholder:
+    :param word_vecs:
+    :param entity_indices:
+    :param num_entities:
+    :param num_relations:
+    :param slice_size:
+    :param batch_size:
+    :param is_eval:
+    :param label_placeholders:
+    :return:
+    """
     print("Begin building g function:")
     # TODO: Check the shapes and axes used here!
     print("Creating variables")
@@ -39,15 +54,20 @@ def g_function(batch_placeholders,
 
     predictions = list()
     print("Beginning relations loop")
-    for r in range(num_relations):
+    for r in range(num_relations):  # num_relations == 11
         print("#relations: " + str(r))
         # TODO: should the split dimension be 0 or 1?
-        e1, e2, e3 = tf.split(1, 3, tf.cast(batch_placeholders[r], tf.int32))
+        # modify
+        # e1, e2, e3 = tf.split(1, 3, tf.cast(data_placeholders[r], tf.int32))
+        # shape of e1, e2, and e3 are (None, 1)
+        e1, e2, e3 = tf.split(tf.cast(data_placeholders[r], tf.int32), 3, axis=1)
+        # ======================================================================
+
+        # shape of e1v, e2v, and e3v: (100, None)
         e1v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e1, name='e1v' + str(r)), [1]))
         e2v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e2, name='e2v' + str(r)), [1]))
         e3v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e3, name='e3v' + str(r)), [1]))
-        exit()
-        
+
         e1v_pos = e1v
         e2v_pos = e2v
         e1v_neg = e1v
@@ -68,8 +88,12 @@ def g_function(batch_placeholders,
         preactivation_pos = tf.stack(preactivation_pos)
         preactivation_neg = tf.stack(preactivation_neg)
 
-        temp2_pos = tf.matmul(var_V[r], tf.concat(0, [e1v_pos, e2v_pos]))
-        temp2_neg = tf.matmul(var_V[r], tf.concat(0, [e1v_neg, e2v_neg]))
+        # modify
+        # temp2_pos = tf.matmul(var_V[r], tf.concat(0, [e1v_pos, e2v_pos]))
+        # temp2_neg = tf.matmul(var_V[r], tf.concat(0, [e1v_neg, e2v_neg]))
+        temp2_pos = tf.matmul(var_V[r], tf.concat([e1v_pos, e2v_pos], 0))
+        temp2_neg = tf.matmul(var_V[r], tf.concat([e1v_neg, e2v_neg], 0))
+        # =====================================================================
 
         # print("   temp2_pos: "+str(temp2_pos.get_shape()))
         preactivation_pos = preactivation_pos + temp2_pos + var_b[r]
@@ -87,32 +111,37 @@ def g_function(batch_placeholders,
         else:
             predictions.append(tf.stack([score_pos, tf.reshape(label_placeholders[r], num_rel_r)]))
 
-    predictions = tf.concat(1, predictions)
+    # modify
+    # predictions = tf.concat(1, predictions)
+    predictions = tf.concat(predictions, 1)
+    # =========================================================================
 
     return predictions
 
 
 def loss(predictions, regularization):
     print("Beginning building loss")
-    temp1 = tf.maximum(tf.sub(predictions[1, :], predictions[0, :]) + 1, 0)
+    # modify
+    # temp1 = tf.maximum(tf.sub(predictions[1, :], predictions[0, :]) + 1, 0)
+    temp1 = tf.maximum(tf.subtract(predictions[1, :], predictions[0, :]) + 1, 0)
+    # =========================================================================
     temp1 = tf.reduce_sum(temp1)
-
     temp2 = tf.sqrt(sum([tf.reduce_sum(tf.square(var)) for var in tf.trainable_variables()]))
-
     temp = temp1 + (regularization * temp2)
-
     return temp
 
 
-def training(loss, learningRate):
+def training(loss, learning_rate):
     print("Beginning building training")
-
-    return tf.train.AdagradOptimizer(learningRate).minimize(loss)
+    return tf.train.AdagradOptimizer(learning_rate).minimize(loss)
 
 
 def eval(predictions):
     print("predictions " + str(predictions.get_shape()))
-    inference, labels = tf.split(0, 2, predictions)
+    # modify
+    # inference, labels = tf.split(0, 2, predictions)
+    inference, labels = tf.split(predictions, 2, axis=0)
+    # =========================================================================
     # inference = tf.transpose(inference)
     # inference = tf.concat((1-inference), inference)
     # labels = ((tf.cast(tf.squeeze(tf.transpose(labels)), tf.int32))+1)/2

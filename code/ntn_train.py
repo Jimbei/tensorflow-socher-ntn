@@ -1,29 +1,29 @@
-import tensorflow as tf
-import ntn_input  # library for reading data
-import ntn
-import params
 import numpy as np
-import numpy.matlib
 import random
 import datetime
+import tensorflow as tf
+# defined lib
+import ntn_input
+import ntn
+import params
 
 
-def index_training_data(raw_training_data, entities_list, relations_list):
+def index_data(raw_data, entity_list, relation_list):
     """
-    Encode training data into number
+    index raw data into number
 
-    :param raw_training_data:
-    :param entities_list:
-    :param relations_list:
+    :param raw_data:
+    :param entity_list:
+    :param relation_list:
     :return: indexing training data
     """
-    entity_to_index = {entities_list[i]: i for i in range(len(entities_list))}
-    relation_to_index = {relations_list[i]: i for i in range(len(relations_list))}
-    indexing_training_data = [(entity_to_index[raw_training_data[i][0]],
-                               relation_to_index[raw_training_data[i][1]],
-                               entity_to_index[raw_training_data[i][2]])
-                              for i in range(len(raw_training_data))]
-    return indexing_training_data
+    entity_to_index = {entity_list[i]: i for i in range(len(entity_list))}
+    relation_to_index = {relation_list[i]: i for i in range(len(relation_list))}
+    indexing_data = [(entity_to_index[raw_data[i][0]],
+                      relation_to_index[raw_data[i][1]],
+                      entity_to_index[raw_data[i][2]])
+                     for i in range(len(raw_data))]
+    return indexing_data
 
 
 def generate_corrupting_data(corrupting_data_size, indexed_training_data, num_entities, corrupting_sample_size):
@@ -72,19 +72,28 @@ def fill_feed_dict(relation_batches, train_both, batch_placeholders, label_place
 
 
 def run_training():
-    print("Begin!")
-    # python list of (e1, R, e2) for entire training set in string form
     print("Load training data from train.txt...")
     raw_training_data = ntn_input.load_training_data(params.data_path)
+    # print('type of raw_training_data is ' + str(type(raw_training_data)))
+    # type of f raw_training_data is numpy array
+
     print("Load entities from entities.txt ...")
     entities_list = ntn_input.load_entities(params.data_path)
+    # print('type of entities_list is ' + str(type(entities_list)))
+
     print('Load relations from relations.txt...')
     relations_list = ntn_input.load_relations(params.data_path)
-    # python list of (e1, R, e2) for entire training set in index form
+    # print('type of relations_list is ' + str(type(relations_list)))
+
     print('Indexing training data ...')
-    indexing_training_data = index_training_data(raw_training_data, entities_list, relations_list)
+    indexing_training_data = index_data(raw_training_data, entities_list, relations_list)
+    indexing_training_data = random.sample(indexing_training_data, 10000)
+    # print('type of indexing_training_data is ' + str(type(indexing_training_data)))
+
     print("Load initial embedding parameters ...")
     word_vecs, entity_indices = ntn_input.load_init_embeds(params.data_path)
+    # print('type of word_vecs is ' + str(type(word_vecs)))
+    # print('type of entity_indices is ' + str(type(entity_indices)))
 
     num_entities = len(entities_list)
     num_relations = len(relations_list)
@@ -96,15 +105,18 @@ def run_training():
 
     with tf.Graph().as_default():
         print("Starting to build graph " + str(datetime.datetime.now()))
-        batch_placeholders = [tf.placeholder(tf.int32, shape=(None, 3), name='batch_' + str(i)) for i in
-                              range(num_relations)]
-        label_placeholders = [tf.placeholder(tf.float32, shape=(None, 1), name='label_' + str(i)) for i in
-                              range(num_relations)]
+        print('Initialize placeholder')
+        data_placeholders = [tf.placeholder(tf.int32, shape=(None, 3), name='batch_' + str(i))
+                             for i in range(num_relations)]
+
+        label_placeholders = [tf.placeholder(tf.float32, shape=(None, 1), name='label_' + str(i))
+                              for i in range(num_relations)]
 
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
 
         # ====  Build Model ====
-        prediction_values = ntn.g_function(batch_placeholders,
+        print('Define g function')
+        prediction_values = ntn.g_function(data_placeholders,
                                            corrupt_placeholder,
                                            word_vecs,
                                            entity_indices,
@@ -117,10 +129,12 @@ def run_training():
         # =====================================================================
 
         # ==== Define loss function ====
+        print('Define loss function')
         loss = ntn.loss(prediction_values, params.regularization)
         # =====================================================================
 
         # ==== Define training algorithm ====
+        print('Define training algorithm')
         training = ntn.training(loss, params.learning_rate)
         # =====================================================================
 
@@ -144,7 +158,7 @@ def run_training():
 
             feed_dict = fill_feed_dict(relation_corrupting_data,
                                        params.train_both,
-                                       batch_placeholders,
+                                       data_placeholders,
                                        label_placeholders,
                                        corrupt_placeholder)
             _, loss_value = sess.run([training, loss], feed_dict=feed_dict)

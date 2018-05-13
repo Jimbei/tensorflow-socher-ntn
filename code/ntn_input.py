@@ -60,8 +60,10 @@ def load_embeds(file_path):
     
     # reshapes the content of matrix we
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
+    # modify
     # entity_indices = [map(int, tree[i][0][0][0][0][0]) for i in range(len(tree))]
     entity_indices = [list(tree[i][0][0][0][0][0]) for i in range(len(tree))]
+    # =========================================================================
     return word_vecs, entity_indices
 
 
