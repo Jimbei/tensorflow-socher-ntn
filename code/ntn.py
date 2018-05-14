@@ -35,8 +35,10 @@ def g_function(data_placeholders,  # shape == (None, 3)
     print("Creating variables")
     d = 100  # embedding_size
     k = slice_size
-    ten_k = tf.constant([k])
-    num_words = len(word_vecs)
+    # delete
+    # ten_k = tf.constant([k])
+    # num_words = len(word_vecs)
+    # =========================================================================
     # TODO: does wordvecs need to change to list?
     var_E = tf.Variable(word_vecs)  # create a variable with initial values from wordvecs
     var_W = [tf.Variable(tf.truncated_normal([d, d, k])) for r in range(num_relations)]
@@ -45,7 +47,6 @@ def g_function(data_placeholders,  # shape == (None, 3)
     var_U = [tf.Variable(tf.ones([1, k])) for r in range(num_relations)]
 
     print("Convert entity_indices to tensor_entity_indices ...")
-    entity_indices = random.sample(entity_indices, 600)
     tensor_entity_indices = [tf.constant(entity_i, tf.int32) - 1 for entity_i in entity_indices]
 
     print("Calculate tensor_embedding_entity ...")
@@ -137,7 +138,7 @@ def training(loss, learning_rate):
 
 
 def eval(predictions):
-    print("predictions " + str(predictions.get_shape()))
+    # print("predictions " + str(predictions.get_shape()))
     # modify
     # inference, labels = tf.split(0, 2, predictions)
     inference, labels = tf.split(predictions, 2, axis=0)

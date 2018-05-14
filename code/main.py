@@ -1,12 +1,16 @@
 import csv
 import tensorflow as tf
+import matplotlib.pyplot as plt
 import numpy as np
+import random
+import xlrd
 
 import utils
 
 
 # from tensorflow.python.client import device_lib
 
+DATA_FILE = '../data/Wordnet/additionalFiles/fire_theft.xls'
 
 # TODO: why do we need initEmbed?
 # This is a kind of pre-trained model used for initial step
@@ -17,127 +21,90 @@ import utils
 # TODO: understand tf.squeeze(a_tensor, list_specified_dimension_size_1)
 # Remove dimensions of size 1 from the shape of a tensor
 # TODO: understand tf.expand_dims(tf.shape(e1v_pos)[1], 0)
+# TODO: understand tf.Print()
+# print_out_x = tf.Print(x, [x], summarize=x.shape[0], message='Value of x: ', name='x_value')
 
 
 def lab():
-    sess = tf.Session()
-    a = tf.constant([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+    n_sample = 100
+    train_X = np.linspace(1, 50, n_sample)
+    train_Y = 1.5 * train_X + 10.0 + np.random.normal(scale=10, size=1)
+    # train_Y = [1.5 * train_X[i] + random.randint(1, 6) for i in range(0, len(train_X))]
+    # data_vstack = np.vstack((original_X, original_Y)).reshape(n_sample, 2)
+    # print(data_vstack)
+    # random.shuffle(data_vstack)
+    # print(data_vstack)
+    #
+    # data_zip = list(zip(original_X, original_Y))
+    # print(data_zip)
+    # random.shuffle(data_zip)
+    # print(data_zip)
+    #
+    # shuffle_X = [data_zip[i][0] for i in range(0, len(original_X))]
+    # shuffle_Y = [data_zip[i][1] for i in range(0, len(original_Y))]
+    #
+    # plt.plot(original_X, original_Y, 'bo', label='Original data')
+    # plt.plot(shuffle_X, shuffle_Y, 'r', label='Shuffle data')
+    # plt.legend()
+    # plt.show()
+    #
+    # exit()
 
-    x, y, z = tf.split(a, 3, axis=1)
+    data = list(zip(train_X, train_Y))
+    random.shuffle(data)
+    
+    # print('type of train_X: {}, type of train_Y: {}'.format(str(type(train_X)), str(type(train_Y))))
+    # print('shape of train_X: {}, shape of train_Y: {}'.format(str(train_X.shape), str(train_Y.shape)))
+    # TODO: convert to np.array
+    # data = np.vstack((train_X, train_Y)).reshape(n_sample, 2)
+    # print(data)
+    # exit()
+    # data = np.asanyarray([[train_X[i], train_Y[i]] for i in range(len(train_X))])
+    
+    # book = xlrd.open_workbook(DATA_FILE, encoding_override="utf-8")
+    # sheet = book.sheet_by_index(0)
+    # data = np.asarray([sheet.row_values(i) for i in range(1, sheet.nrows)])
+    # n_samples = sheet.nrows - 1
 
-    shape_x = x.get_shape().as_list()
-    shape_y = y.get_shape().as_list()
-    shape_z = z.get_shape().as_list()
+    # print('type of data: {}, shape of data: {}'.format(str(type(data)), str(data.shape)))
+    # print('sample of data: ' + str(data[random.randint(0, len(data))]))
+    # random.shuffle(data)  # have to shuffle data, otherwise w and b would be na
+    # =========================================================================
+    
+    # Step 2
+    placeholder_X = tf.placeholder(dtype=tf.float32, name='X')
+    placeholder_Y = tf.placeholder(dtype=tf.float32, name='Y')
+    
+    # Step 3
+    w = tf.Variable(0.0, name='weight')
+    b = tf.Variable(0.0, name='bias')
+    
+    # Step 4
+    Y_predicted = placeholder_X * w + b
+    
+    # Step 5
+    loss = tf.square(placeholder_Y - Y_predicted, name="loss")
+    
+    # Step 6
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
+    
+    with tf.Session() as sess:
+        # Step 7
+        sess.run(tf.global_variables_initializer())
+        
+        # Step 8
+        for i in range(30):
+            total_loss = 0
+            for x, y in data:
+                # sess.run(optimizer, feed_dict={placeholder_X: x, placeholder_Y: y})
+                # print('x: {} and y: {}'.format(x, y))
+                _, l = sess.run([optimizer, loss], feed_dict={placeholder_X: x, placeholder_Y: y})
+                total_loss += l
+            print('Epoch {0}: {1}'.format(i, total_loss / n_sample))
 
-    print(shape_x)
-    print(shape_y)
-    print(shape_z)
-
-    print_out_x = tf.Print(x, [x], summarize=x.shape[0], message='Value of x: ', name='x_value')
-    print_out_y = tf.Print(y, [y], summarize=y.shape[0], message='Value of y: ', name='y_value')
-    print_out_z = tf.Print(z, [z], summarize=z.shape[0], message='Value of z: ', name='z_value')
-
-    sess.run([print_out_x, print_out_y, print_out_z])
-
-    print(print_out_x)
-    print(print_out_y)
-    print(print_out_z)
-
-
-def load_data(path_file, datatype=1):
-    with open(path_file, 'r', newline='') as f:
-        content = csv.reader(f)
-        indices = [list(map(type(datatype), row)) for row in content]
-    print('Finish loading indices.csv\n')
-    return indices
-
-
-def inference():
-    num_relations = 11
-    slice_size = 3  # slice_size = k, the depth of tensor
-    embedding_size = 100
-    predictions = []
-    preactivation_pos = []
-    preactivation_neg = []
-
-    print('Loading initial parameter ...')
-    wordvecs, indices = utils.load_init_embeds()
-    print('Finish loading indices and wordvecs\n')
-
-    # defining graph
-    print('Defining graph')
-    batch_placeholders = \
-        [tf.placeholder(tf.int32, shape=(None, 3), name='batch_xx' + str(i)) for i in range(num_relations)]
-
-    for r in range(num_relations):
-        e1, e2, e3 = tf.split(1, 3, tf.cast(batch_placeholders[r], tf.int32))
-        print(e1)
-        print(e2)
-        print(e3)
-
-    exit()
-
-    ten_variables = tf.Variable(wordvecs, name='my_variable', dtype=tf.float32)
-    print('Converting to tensor object ...')
-    ten_indices = [tf.constant(e, dtype=tf.int32) for e in indices]
-    ten_wordvecs = tf.stack([tf.reduce_mean(tf.gather(ten_variables, index)) for index in ten_indices])
-
-    W = [tf.Variable(tf.truncated_normal([embedding_size, embedding_size, slice_size])) for i in range(num_relations)]
-    V = [tf.Variable(tf.zeros([slice_size, 2 * embedding_size])) for i in range(num_relations)]
-    b = [tf.Variable(tf.zeros([slice_size, 1])) for i in range(num_relations)]
-    U = [tf.Variable(tf.ones([1, slice_size])) for i in range(num_relations)]
-
-    for r in range(num_relations):
-        e1, e2, e3 = tf.split(1, 3, tf.cast(batch_placeholders[r], tf.int32))
-        e1v = tf.transpose(tf.squeeze(tf.gather(ten_wordvecs, e1, name='e1v' + str(r)), [1]))
-        e2v = tf.transpose(tf.squeeze(tf.gather(ten_wordvecs, e2, name='e2v' + str(r)), [1]))
-        e3v = tf.transpose(tf.squeeze(tf.gather(ten_wordvecs, e3, name='e3v' + str(r)), [1]))
-
-        e1v_pos = e1v
-        e2v_pos = e2v
-        e1v_neg = e1v
-        e2v_neg = e3v
-        num_rel_r = tf.expand_dims(tf.shape(e1v_pos)[1], 0)
-
-        for slice_ in range(slice_size):
-            preactivation_pos.append(tf.reduce_sum(e1v_pos * tf.matmul(W[r][:, :, slice_], e2v_pos), 0))
-            preactivation_neg.append(tf.reduce_sum(e1v_neg * tf.matmul(W[r][:, :, slice_], e2v_neg), 0))
-
-        preactivation_pos = tf.stack(preactivation_pos)
-        preactivation_neg = tf.stack(preactivation_neg)
-
-        temp2_pos = tf.matmul(V[r], tf.concat(0, [e1v_pos, e2v_pos]))
-        temp2_neg = tf.matmul(V[r], tf.concat(0, [e1v_neg, e2v_neg]))
-
-        preactivation_pos = preactivation_pos + temp2_pos + b[r]
-        preactivation_neg = preactivation_neg + temp2_neg + b[r]
-
-        activation_pos = tf.tanh(preactivation_pos)
-        activation_neg = tf.tanh(preactivation_neg)
-
-        score_pos = tf.reshape(tf.matmul(U[r], activation_pos), num_rel_r)
-        score_neg = tf.reshape(tf.matmul(U[r], activation_neg), num_rel_r)
-        if not False:
-            predictions.append(tf.stack([score_pos, score_neg]))
-        else:
-            predictions.append(tf.stack([score_pos, tf.reshape(label_placeholders[r], num_rel_r)]))
-
-    exit()
-    return predictions
-
-
-def loss(predictions, regularization):
-    print("Beginning building loss")
-    temp1 = tf.maximum(tf.sub(predictions[1, :], predictions[0, :]) + 1, 0)
-    temp1 = tf.reduce_sum(temp1)
-    temp2 = tf.sqrt(sum([tf.reduce_sum(tf.square(var)) for var in tf.trainable_variables()]))
-    temp = temp1 + (regularization * temp2)
-    return temp
-
-
-def training(loss, learning_rate=0.001):
-    print("Beginning building training")
-    return tf.train.AdagradOptimizer(learning_rate).minimize(loss)
+        # Step 9
+        w_value, b_value = sess.run([w, b])
+        print('optimizing w and b: {} - {}'.format(w_value, b_value))
 
 
 if __name__ == '__main__':

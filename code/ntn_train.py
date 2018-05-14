@@ -87,7 +87,7 @@ def run_training():
 
     print('Indexing training data ...')
     indexing_training_data = index_data(raw_training_data, entities_list, relations_list)
-    indexing_training_data = random.sample(indexing_training_data, 10000)
+    indexing_training_data = random.sample(indexing_training_data, 1000)
     # print('type of indexing_training_data is ' + str(type(indexing_training_data)))
 
     print("Load initial embedding parameters ...")
@@ -104,7 +104,7 @@ def run_training():
     slice_size = params.slice_size  # 3
 
     with tf.Graph().as_default():
-        print("Starting to build graph " + str(datetime.datetime.now()))
+        print("Build graph " + str(datetime.datetime.now()))
         print('Initialize placeholder')
         data_placeholders = [tf.placeholder(tf.int32, shape=(None, 3), name='batch_' + str(i))
                              for i in range(num_relations)]
@@ -142,11 +142,16 @@ def run_training():
         sess = tf.Session()
 
         # Run the Op to initialize the variables.
-        init = tf.initialize_all_variables()
+        # modify
+        # init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
+        # =====================================================================
         sess.run(init)
         saver = tf.train.Saver(tf.trainable_variables())
         for i in range(1, num_iters):
-            print("Starting iter " + str(i) + " " + str(datetime.datetime.now()))
+            # print("Starting iter " + str(i) + " " + str(datetime.datetime.now()))
+            print('#iteration: {}'.format(i))
+            print('Index corrupting data ...')
             indexing_corrupting_data = generate_corrupting_data(corrupting_data_size,
                                                                 indexing_training_data,
                                                                 num_entities,
@@ -154,13 +159,17 @@ def run_training():
             relation_corrupting_data = tidy_corrupting_data(indexing_corrupting_data, num_relations)
 
             if i % params.save_per_iter == 0:
-                saver.save(sess, params.output_path + "/" + params.data_name + str(i) + '.sess')
+                print('Save training model at #iter: {}'.format(i))
+                saver.save(sess, params.output_path + "/" + "trdngy_" + str(i) + '.sess')
+                # saver.save(sess, params.output_path + 'training_model_iter' + str(i) + '.sess')
 
+            print('Fill data ...')
             feed_dict = fill_feed_dict(relation_corrupting_data,
                                        params.train_both,
                                        data_placeholders,
                                        label_placeholders,
                                        corrupt_placeholder)
+            print('Execute graph ...')
             _, loss_value = sess.run([training, loss], feed_dict=feed_dict)
 
             # TODO: Eval against dev set?

@@ -47,7 +47,7 @@ def load_init_embeds(data_path=params.data_path):
 # input: Generic function to load embeddings from a .mat file
 def load_embeds(file_path):
     """
-    Load initEmbed
+    Load initial embedding word vectors
     :param file_path: directory stores initEmbed object
     :return:
         wordvecs:      a list of 67447 initial vectors with the size of 100 elements for each

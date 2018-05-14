@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import xlrd
+import random
 
 import utils
 
@@ -23,6 +24,9 @@ book = xlrd.open_workbook(DATA_FILE, encoding_override="utf-8")
 sheet = book.sheet_by_index(0)
 data = np.asarray([sheet.row_values(i) for i in range(1, sheet.nrows)])
 n_samples = sheet.nrows - 1
+
+print('type of data: {}, shape of data: {}'.format(str(type(data)), str(data.shape)))
+print('sample of data: ' + str(data[random.randint(0, len(data))]))
 
 # Step 2: create placeholders for input placeholder_X (number of fire) and label placeholder_Y (number of theft)
 placeholder_X = tf.placeholder(tf.float32, name='placeholder_X')
@@ -62,6 +66,7 @@ with tf.Session() as sess:
     
     # Step 9: output the values of w and b
     w, b = sess.run([w, b])
+    print('optimizing w and b: {} - {}'.format(w, b))
 
 # plot the results
 placeholder_X, placeholder_Y = data.T[0], data.T[1]
