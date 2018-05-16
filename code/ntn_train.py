@@ -24,6 +24,7 @@ def get_batch(batch_size, data, num_entities, corrupt_size):
     batch = [(data[i][0],  # data[i][0] = e1
               data[i][1],  # data[i][1] = r
               data[i][2],  # data[i][2] = e2
+              # TODO: continue doing this
               random.randint(0, num_entities - 1))  # random = e3 (corrupted)
              for i in random_indices for _ in range(corrupt_size)]
 
@@ -33,10 +34,8 @@ def get_batch(batch_size, data, num_entities, corrupt_size):
 def split_batch(data_batch, num_relations):
     batches = [[] for i in range(num_relations)]
     for e1, r, e2, e3 in data_batch:
+        # print(r)
         batches[r].append((e1, e2, e3))
-
-    # print('sample batches[0][6]: {}'.format(batches[0][6]))
-    # exit()
 
     return batches
 
@@ -46,10 +45,6 @@ def fill_feed_dict(batches, train_both, placeholder_data, placeholder_label, pla
 
     for i in range(len(placeholder_data)):
         feed_dict[placeholder_data[i]] = batches[i]
-
-        # print(batches[i])
-        # exit()
-
         feed_dict[placeholder_label[i]] = [[0.0] for j in range(len(batches[i]))]
 
     return feed_dict
@@ -77,39 +72,55 @@ def filter_entity(entity_indices):
     return filtering_entity
 
 
+def filter_relation(data):
+    filtering_relation = []
+
+    for i in data:
+        e1, r, e2 = i
+        if r not in filtering_relation:
+            filtering_relation.append(r)
+
+    return filtering_relation
+
+
 def run_training():
     print('Begin training process')
     print('Load training data from train.txt ...')
     train_data = ntn_input.load_training_data(params.data_path)
 
     print('Load entity list from entities.txt ...')
-    entities_list = ntn_input.load_entities(params.data_path)
+    entity_list = ntn_input.load_entities(params.data_path)
 
     print('Load relation list from relations.txt ...')
-    relations_list = ntn_input.load_relations(params.data_path)
+    relation_list = ntn_input.load_relations(params.data_path)
+    print('relation list: {}'.format(relation_list))
 
     print('Index raw data ...')
-    train_data = index_data(train_data, entities_list, relations_list)
+    train_data = index_data(train_data, entity_list, relation_list)
     # train_data = random.sample(train_data, 2000)
 
     print('Load embedding word vector ...')
     init_word_embeds, entity_indices = ntn_input.load_init_embeds(params.data_path)
 
-    # # sample data
-    # print('Sample data')
-    # entity_indices = random.sample(entity_indices, 1000)
-    # # filter entity_list
-    # entity_indices = filter_entity(entity_indices)
-    # # filter train_data
-    # train_data = filter_data(train_data, entity_indices)
-    # # filter relation_list
-    # # =========================================================================
+    # sample data
+    print('Sample data')
+    entity_indices = random.sample(entity_indices, 2000)
+    # filter entity_list
+    filtering_entity_list = filter_entity(entity_indices)
+    # filter train_data
+    train_data = filter_data(train_data, filtering_entity_list)
+    # filter relation_list
+    relation_list = filter_relation(train_data)
+    print('filtering relation list: {}'.format(relation_list))
+    # =========================================================================
 
-    num_entities = len(entities_list)
-    num_relations = len(relations_list)
+    # num_entities = len(entities_list)
+    num_entities = len(filtering_entity_list)
+    num_relations = len(relation_list)
 
     num_iters = params.num_iter
-    batch_size = params.batch_size
+    # batch_size = params.batch_size
+    batch_size = int(len(train_data) / 6)
     corrupt_size = params.corrupt_size
     slice_size = params.slice_size
 
@@ -163,8 +174,8 @@ def run_training():
             print('#iter: {}'.format(i))
             data_batch = get_batch(batch_size,
                                    train_data,
-                                   num_entities,  # 11
-                                   corrupt_size)  # 10
+                                   num_entities,
+                                   corrupt_size)
             relation_batches = split_batch(data_batch, num_relations)
 
             # print('data_batch has type {} and size {}'.format(type(data_batch), np.array(data_batch).shape))
@@ -183,6 +194,13 @@ def run_training():
                                        placeholder_data,
                                        placeholder_label,
                                        placeholder_corrupt)
+
+            print_data = tf.Print(placeholder_data,
+                                  [placeholder_data],
+                                  message='training data: ')
+            print(sess.run([print_data]))
+            sess.close()
+            exit()
 
             print('Execute computation graph')
             _, loss_value = sess.run([optimizer, loss], feed_dict=feed_dict)

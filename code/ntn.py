@@ -49,15 +49,12 @@ def inference(batch_placeholders,
     for r in range(num_relations):
         print('#relation: {}'.format(r))
 
+        # (?, 1)
         e1, e2, e3 = tf.split(tf.cast(batch_placeholders[r], tf.int32), 3, axis=1)
-        print('shape of e1 {}'.format(e1.get_shape()))
-
+        # (100, ?)
         e1v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e1, name='e1v' + str(r)), [1]))
         e2v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e2, name='e2v' + str(r)), [1]))
         e3v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e3, name='e3v' + str(r)), [1]))
-
-        print('shape of e1 {}'.format(e1.get_shape()))
-        exit()
 
         e1v_pos = e1v
         e2v_pos = e2v
