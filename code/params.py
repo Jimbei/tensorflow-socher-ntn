@@ -9,7 +9,8 @@ output_path = '../output/'+data_name+'/'
 
 num_iter = 500
 train_both = False
-batch_size = 170  # 20000
+batch_size = 20000
+# batch_size = 170
 corrupt_size = 10  # how many negative examples are given for each positive example?
 embedding_size = 100
 slice_size = 3  # depth of tensor for each relation
