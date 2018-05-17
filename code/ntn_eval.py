@@ -51,7 +51,6 @@ def run_evaluation():
 
     print('Index raw data ...')
     test_data = index_data(test_data, entities_list, relations_list)
-    # test_data = random.sample(test_data, 10000)
 
     batch_size = len(test_data)
     num_entities = len(entities_list)

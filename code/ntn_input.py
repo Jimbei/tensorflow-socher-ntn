@@ -47,7 +47,7 @@ def load_embeds(file_path):
     tree = mat_contents['tree']
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     entity_indices = [list(map(int, tree[i][0][0][0][0][0])) for i in range(len(tree))]
-
+    
     return word_vecs, entity_indices
 
 
@@ -66,5 +66,5 @@ def load_dev_data(data_path=params.data_path):
 def load_test_data(data_path=params.data_path):
     test_file = open(data_path + '/test.txt')
     test_data = [line.split('\t') for line in test_file.read().strip().split('\n')]
-
+    
     return np.array(test_data)
