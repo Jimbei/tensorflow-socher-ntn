@@ -1,4 +1,6 @@
 
 original_codebase/
 original_codebase/*
+.idea/
+__pycache__/
 
