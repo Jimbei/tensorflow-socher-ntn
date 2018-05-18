@@ -27,13 +27,14 @@ def index_data(data, entity_list, entity_indices, relation_list):
 
 
 def generate_corrupting_batch(batch_size, data, num_entities, corrupt_size, entity_list):
-    # TODO continue doing here
-    # random_indices = random.sample(range(len(data)), batch_size)
-    # corrupting_batch = [(data[i][0],  # data[i][0] = e1
-    #                      data[i][1],  # data[i][1] = r
-    #                      data[i][2],  # data[i][2] = e2
-    #                      random.randint(0, num_entities - 1))  # random = e3 (corrupted)
-    #                     for i in random_indices for _ in range(corrupt_size)]
+    random_indices = random.sample(range(len(data)), batch_size)
+    # TODO random data based on the relation
+    # tmp = [[]]
+    corrupting_batch = [(data[i][0],  # data[i][0] = e1
+                         data[i][1],  # data[i][1] = r
+                         data[i][2],  # data[i][2] = e2
+                         random.randint(0, num_entities - 1))  # random = e3 (corrupted)
+                        for i in random_indices for _ in range(corrupt_size)]
 
     return corrupting_batch
 
