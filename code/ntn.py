@@ -21,19 +21,6 @@ def inference(batch_placeholders,
               is_eval,
               label_placeholders,
               E, W, V, b, U):
-    # TODO: We need to check the shapes and axes used here!
-    embedding_size = 100
-
-    # E = tf.Variable(word_vecs)
-    # W = [tf.Variable(tf.truncated_normal([embedding_size, embedding_size, slice_size]))
-    #      for _ in range(num_relations)]
-    # V = [tf.Variable(tf.zeros([slice_size, 2 * embedding_size]))
-    #      for _ in range(num_relations)]
-    # b = [tf.Variable(tf.zeros([slice_size, 1]))
-    #      for _ in range(num_relations)]
-    # U = [tf.Variable(tf.ones([1, slice_size]))
-    #      for _ in range(num_relations)]
-
     print('Convert entity_indices to tf.constant')
     tensor_entity_indices = [tf.constant(entity_i) - 1
                              for entity_i in entity_indices]

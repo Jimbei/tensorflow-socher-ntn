@@ -12,9 +12,9 @@ def main():
     
     print(data)
     
-    sort_data = [d if r == d[1] else for d in data for r in range(3) if r == d[1]]
-    
-    print(sort_data)
+    sort_data = [[T for T in data if r == T[1]] for r in range(3)]
+    for i in sort_data:
+        print(i)
 
 
 if __name__ == '__main__':

@@ -2,41 +2,73 @@ import random
 import numpy as np
 
 
-def index_data(data, entity_list, entity_indices, relation_list):
+def index_data(data, entity_list, entity_indices):
     print('Sample data')
     # filter entity
-    fil_entity_list = random.sample(entity_list, 1000)
+    fil_entity_list = random.sample(entity_list, 2000)
     # filter triple
     data = filter_data(data, fil_entity_list)
     # filter relation
-    print('original relation list: {}'.format(relation_list))
-    relation_list = filter_relation(data)
-    print('filtering relation list: {}'.format(relation_list))
+    # print('original relation list: {}'.format(relation_list))
+    fil_relation_list = filter_relation(data)
+    # print('filtering relation list: {}'.format(fil_relation_list))
     # filter entity indices
     fil_entity_indices = filter_entity_indices(entity_list, entity_indices, fil_entity_list)
     # =========================================================================
 
     indexing_entities = {fil_entity_list[i]: i for i in range(len(fil_entity_list))}
-    indexing_relations = {relation_list[i]: i for i in range(len(relation_list))}
+    indexing_relations = {fil_relation_list[i]: i for i in range(len(fil_relation_list))}
     indexing_data = [[indexing_entities[data[i][0]],
                       indexing_relations[data[i][1]],
                       indexing_entities[data[i][2]]]
                      for i in range(len(data))]
 
-    return indexing_data, len(fil_entity_list), len(relation_list), fil_entity_list
+    num_entities = len(fil_entity_list)
+    num_relations = len(fil_relation_list)
+
+    return indexing_data, fil_entity_indices, num_entities, num_relations
 
 
-def generate_corrupting_batch(batch_size, data, num_entities, corrupt_size, entity_list):
-    random_indices = random.sample(range(len(data)), batch_size)
-    # TODO random data based on the relation
-    # tmp = [[]]
-    corrupting_batch = [(data[i][0],  # data[i][0] = e1
-                         data[i][1],  # data[i][1] = r
-                         data[i][2],  # data[i][2] = e2
-                         random.randint(0, num_entities - 1))  # random = e3 (corrupted)
-                        for i in random_indices for _ in range(corrupt_size)]
+def generate_corrupting_batch(batch_size, data, num_entities, corrupt_size, num_relations):
+    # sort data according to relation
+    # print('\n===== Data =====\n{}\n'.format(data))
+    sorted_data = [[T for T in data if r == T[1]] for r in range(num_relations)]
+    # print('===== Sort Data =====\n')
+    # for T in sorted_data:
+    #     print('{} - number of T is {}'.format(T, len(T)))
+    # random sample from relation
+    batch_size = int(batch_size / num_relations)
+    # print('batch_size for sorted data: {}'.format(batch_size))
+    random_data = []
+    for T in sorted_data:
+        if len(T) > batch_size:
+            T = random.sample(T, batch_size)
 
-    return corrupting_batch
+        random_data.append(T)
+
+    # print('\nRandom batch')
+    # for T in random_data:
+    #     print(T)
+
+    # add corrupting entity
+    corrupting_data = []
+    for r in random_data:
+        for T in r:
+            for i in range(corrupt_size):
+                corrupting_data.append([T[0], T[1], T[2], random.randint(0, num_entities - 1)])
+
+    # print('\nCorrupting data')
+    # for T in corrupting_data:
+    #     print(T)
+
+    # random_indices = random.sample(range(len(data)), batch_size)
+    # corrupting_batch = [(data[i][0],  # data[i][0] = e1
+    #                      data[i][1],  # data[i][1] = r
+    #                      data[i][2],  # data[i][2] = e2
+    #                      random.randint(0, num_entities - 1))  # random = e3 (corrupted)
+    #                     for i in random_indices for _ in range(corrupt_size)]
+
+    return corrupting_data
 
 
 def split_corrupting_batch(data_batch, num_relations):
@@ -59,12 +91,12 @@ def fill_feed_dict(relation_batches, train_both, placeholder_data, placeholder_l
     return feed_dict
 
 
-def filter_data(data, filtering_entity):
+def filter_data(data, fil_entity_list):
     filtering_data = []
 
     for i in range(len(data)):
         e1, r, e2 = data[i]
-        if e1 in filtering_entity and e2 in filtering_entity:
+        if e1 in fil_entity_list and e2 in fil_entity_list:
             filtering_data.append(data[i])
 
     return filtering_data
@@ -88,7 +120,6 @@ def filter_entity_indices(entity_list, entity_indices, fil_entity_list):
         if entity_list[i] in fil_entity_list:
             fil_entity_indices.append(entity_indices[i])
 
-    assert len(fil_entity_list) == len(fil_entity_indices)
     return fil_entity_indices
 
 
