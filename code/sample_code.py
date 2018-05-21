@@ -1,10 +1,3 @@
-""" Simple linear regression example in TensorFlow
-This program tries to predict the number of thefts from
-the number of fire in the city of Chicago
-Author: Chip Huyen
-Prepared for the class CS 20SI: "TensorFlow for Deep Learning Research"
-cs20si.stanford.edu
-"""
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -15,9 +8,18 @@ import tensorflow as tf
 import xlrd
 import random
 
-import utils
+# import utils
 
-DATA_FILE = '../data/Wordnet/additionalFiles/fire_theft.xls'
+""" Simple linear regression example in TensorFlow
+This program tries to predict the number of thefts from
+the number of fire in the city of Chicago
+Author: Chip Huyen
+Prepared for the class CS 20SI: "TensorFlow for Deep Learning Research"
+cs20si.stanford.edu
+"""
+
+DATA_FILE = '../data/sampledata/fire_theft.xls'
+MODEL_PATH = '../data/checkpoints/best_validation'
 
 # Step 1: read in data from the .xls file
 book = xlrd.open_workbook(DATA_FILE, encoding_override="utf-8")
@@ -51,6 +53,7 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
     writer = tf.summary.FileWriter('./graphs/linear_reg', sess.graph)
+    saver = tf.train.Saver(tf.trainable_variables())
 
     # Step 8: train the model
     for i in range(50):  # train the model 100 epochs
@@ -59,8 +62,11 @@ with tf.Session() as sess:
             # Session runs train_op and fetch values of loss
             _, l = sess.run([optimizer, loss], feed_dict={placeholder_X: x, placeholder_Y: y})
             total_loss += l
+
+        # save model
         print('Epoch {0}: {1}'.format(i, total_loss / n_samples))
 
+    saver.save(sess, MODEL_PATH + '.sess')
     # close the writer when you're done using it
     writer.close()
 
