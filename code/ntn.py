@@ -100,6 +100,7 @@ def training(loss, learning_rate):
 def eval(predictions):
     print('shape of predictions {}'.format(str(predictions.get_shape())))
     score_values, labels = tf.split(predictions, 2, axis=0)
+    # debug tf.Print
     debug_printout = tf.Print(score_values, [score_values, labels], message='Value of inference and labels: ')
 
     # inference = tf.transpose(inference)

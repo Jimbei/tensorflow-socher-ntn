@@ -10,6 +10,9 @@ def main():
     placeholder_X = tf.placeholder(tf.float32, name='placeholder_X')
     placeholder_Y = tf.placeholder(tf.float32, name='placeholder_Y')
 
+    # define hypothesis function
+
+
     w = tf.Variable(0.0)
 
     with tf.Session() as sess:
