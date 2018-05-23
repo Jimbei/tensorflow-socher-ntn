@@ -18,7 +18,7 @@ Prepared for the class CS 20SI: "TensorFlow for Deep Learning Research"
 cs20si.stanford.edu
 """
 
-DATA_FILE = '../data/sampledata/fire_theft.xls'
+DATA_FILE = '../data/fire_theft/fire_theft.xls'
 MODEL_PATH = '../data/checkpoints/best_validation'
 
 # Step 1: read in data from the .xls file
@@ -57,7 +57,7 @@ with tf.Session() as sess:
     saver = tf.train.Saver(tf.trainable_variables())
     
     # Step 8: train the model
-    for i in range(50):  # train the model 100 epochs
+    for i in range(100):  # train the model 100 epochs
         total_loss = 0
         for x, y in data:
             # Session runs train_op and fetch values of loss
