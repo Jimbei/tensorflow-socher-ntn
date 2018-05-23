@@ -44,6 +44,7 @@ def run_training():
         placeholder_corrupt = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
 
         print('Create variables')
+        # TODO E.shape == (38696, 100)
         E = tf.Variable(init_word_embeds)
         W = [tf.Variable(tf.truncated_normal([params.embedding_size, params.embedding_size, slice_size]))
              for _ in range(num_relations)]
@@ -54,7 +55,7 @@ def run_training():
         U = [tf.Variable(tf.ones([1, slice_size]))
              for _ in range(num_relations)]
 
-        print('Define model')
+        print('Define hypothesis function')
         inference = ntn.inference(placeholder_data,
                                   placeholder_corrupt,
                                   init_word_embeds,

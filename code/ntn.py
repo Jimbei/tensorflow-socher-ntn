@@ -10,7 +10,7 @@ import numpy as np
 # Training
 
 # returns a (batch_size*corrupt_size, 2) vector corresponding to [g(T^i), g(T_c^i)] for all i
-def inference(batch_placeholders,
+def inference(features,
               corrupt_placeholder,
               word_vecs,
               entity_indices,
@@ -37,7 +37,7 @@ def inference(batch_placeholders,
         print('#relation: {}'.format(r))
 
         # (?, 1)
-        e1, e2, e3 = tf.split(tf.cast(batch_placeholders[r], tf.int32), 3, axis=1)
+        e1, e2, e3 = tf.split(tf.cast(features[r], tf.int32), 3, axis=1)
         # (100, ?)
         e1v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e1, name='e1v' + str(r)), [1]))
         e2v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e2, name='e2v' + str(r)), [1]))
@@ -55,19 +55,25 @@ def inference(batch_placeholders,
         # print("W[r][:,:,slice]: "+str(W[r][:,:,0].get_shape()))
         # print("e2v_pos: "+str(e2v_pos.get_shape()))
 
+        # =====================================================================
         # print("Starting preactivation funcs")
         for i in range(slice_size):
             preactivation_pos.append(tf.reduce_sum(e1v_pos * tf.matmul(W[r][:, :, i], e2v_pos), 0))
             preactivation_neg.append(tf.reduce_sum(e1v_neg * tf.matmul(W[r][:, :, i], e2v_neg), 0))
+        # =====================================================================
 
+        # =====================================================================
         preactivation_pos = tf.stack(preactivation_pos)
         preactivation_neg = tf.stack(preactivation_neg)
 
         temp2_pos = tf.matmul(V[r], tf.concat([e1v_pos, e2v_pos], 0))
         temp2_neg = tf.matmul(V[r], tf.concat([e1v_neg, e2v_neg], 0))
+        # =====================================================================
 
+        # =====================================================================
         preactivation_pos = preactivation_pos + temp2_pos + b[r]
         preactivation_neg = preactivation_neg + temp2_neg + b[r]
+        # =====================================================================
 
         activation_pos = tf.tanh(preactivation_pos)
         activation_neg = tf.tanh(preactivation_neg)

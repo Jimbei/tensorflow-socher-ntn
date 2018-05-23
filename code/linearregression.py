@@ -27,8 +27,9 @@ sheet = book.sheet_by_index(0)
 data = np.asarray([sheet.row_values(i) for i in range(1, sheet.nrows)])
 n_samples = sheet.nrows - 1
 
-print('type of data: {}, shape of data: {}'.format(str(type(data)), str(data.shape)))
-print('sample of data: ' + str(data[random.randint(0, len(data))]))
+print('type of data: {}, shape of data: {}, number of sample: {}'.format(str(type(data)),
+                                                                     str(data.shape),
+                                                                     n_samples))
 
 # Step 2: create placeholders for input placeholder_X (number of fire) and label placeholder_Y (number of theft)
 placeholder_X = tf.placeholder(tf.float32, name='placeholder_X')
@@ -51,10 +52,10 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss
 with tf.Session() as sess:
     # Step 7: initialize the necessary variables, in this case, w and b
     sess.run(tf.global_variables_initializer())
-
+    
     writer = tf.summary.FileWriter('./graphs/linear_reg', sess.graph)
     saver = tf.train.Saver(tf.trainable_variables())
-
+    
     # Step 8: train the model
     for i in range(50):  # train the model 100 epochs
         total_loss = 0
@@ -62,14 +63,14 @@ with tf.Session() as sess:
             # Session runs train_op and fetch values of loss
             _, l = sess.run([optimizer, loss], feed_dict={placeholder_X: x, placeholder_Y: y})
             total_loss += l
-
+        
         # save model
         print('Epoch {0}: {1}'.format(i, total_loss / n_samples))
-
+    
     saver.save(sess, MODEL_PATH + '.sess')
     # close the writer when you're done using it
     writer.close()
-
+    
     # Step 9: output the values of w and b
     w, b = sess.run([w, b])
     print('optimizing w and b: {} - {}'.format(w, b))

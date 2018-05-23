@@ -1,23 +1,14 @@
-import random
-import tensorflow as tf
 import numpy as np
-
-CKPT_DIR = '../data/checkpoints/best_validation'
+import tensorflow as tf
 
 
 def main():
-
-    placeholder_X = tf.placeholder(tf.float32, name='placeholder_X')
-    placeholder_Y = tf.placeholder(tf.float32, name='placeholder_Y')
-
-    # define hypothesis function
-
-
-    w = tf.Variable(0.0)
-
+    a = tf.constant([1, 2, 3, 4], name='a')
+    b = tf.constant(2, name='b')
+    c = a * b
+    
     with tf.Session() as sess:
-        saver = tf.train.import_meta_graph(CKPT_DIR + '.sess.meta')
-        saver.restore(sess, CKPT_DIR + '.sess')
+        print(sess.run(c))
 
 
 if __name__ == '__main__':

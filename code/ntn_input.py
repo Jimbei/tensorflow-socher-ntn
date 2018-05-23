@@ -48,6 +48,9 @@ def load_embeds(file_path):
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     entity_indices = [list(map(int, tree[i][0][0][0][0][0])) for i in range(len(tree))]
     
+    print('{}'.format(np.array(word_vecs).shape))
+    exit()
+    
     return word_vecs, entity_indices
 
 
