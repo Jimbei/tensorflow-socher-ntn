@@ -44,24 +44,23 @@ def main():
     pred_labels = hypothesis(features, w, b)
 
     print('Define loss function')
-    # loss = tf.reduce_mean(tf.square(labels - pred_labels, name='loss'))
-    loss = tf.square(labels - pred_labels, name='loss')
+    loss = tf.reduce_mean(tf.square(labels - pred_labels, name='loss'))
 
     print('Define optimizer function')
     optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
-        saver = tf.train.Saver(tf.trainable_variables())
-        feed_dict = fill_feed_dict(train_data, features, labels)
+        X = np.reshape(train_data[:, 0], (len(train_data), 1))
+        Y = np.reshape(train_data[:, 1], (len(train_data), 1))
+        feed_dict = {features: X, labels: Y}
 
         for i in range(100):
             _, loss_value = sess.run([optimizer, loss], feed_dict)
-            print('Epoch {} has loss value {}'.format(i, loss_value))
-            if i == 99:
-                saver.save(sess, CKPT_DIR)
+            print('Epoch {} has loss value {}'.format(i, loss_value / len(train_data)))
 
         w, b = sess.run([w, b])
+        print('optimizing w and b: {} - {}'.format(w, b))
 
     features, labels = train_data.T[0], train_data.T[1]
     plt.plot(features, labels, 'bo', label='Real data')

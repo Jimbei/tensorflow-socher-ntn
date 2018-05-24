@@ -1,5 +1,2 @@
-model_checkpoint_path: "Wordnet400.sess"
+model_checkpoint_path: "Wordnet100.sess"
 all_model_checkpoint_paths: "Wordnet100.sess"
-all_model_checkpoint_paths: "Wordnet200.sess"
-all_model_checkpoint_paths: "Wordnet300.sess"
-all_model_checkpoint_paths: "Wordnet400.sess"

@@ -28,8 +28,8 @@ data = np.asarray([sheet.row_values(i) for i in range(1, sheet.nrows)])
 n_samples = sheet.nrows - 1
 
 print('type of data: {}, shape of data: {}, number of sample: {}'.format(str(type(data)),
-                                                                     str(data.shape),
-                                                                     n_samples))
+                                                                         str(data.shape),
+                                                                         n_samples))
 
 # Step 2: create placeholders for input placeholder_X (number of fire) and label placeholder_Y (number of theft)
 placeholder_X = tf.placeholder(tf.float32, name='placeholder_X')
@@ -61,8 +61,8 @@ with tf.Session() as sess:
         total_loss = 0
         for x, y in data:
             # Session runs train_op and fetch values of loss
-            _, l = sess.run([optimizer, loss], feed_dict={placeholder_X: x, placeholder_Y: y})
-            total_loss += l
+            _, loss_value = sess.run([optimizer, loss], feed_dict={placeholder_X: x, placeholder_Y: y})
+            total_loss += loss_value
         
         # save model
         print('Epoch {0}: {1}'.format(i, total_loss / n_samples))

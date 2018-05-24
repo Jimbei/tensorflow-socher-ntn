@@ -5,6 +5,7 @@
 import params
 import scipy.io as sio
 import numpy as np
+import random
 
 entities_string = '/entities.txt'
 relations_string = '/relations.txt'
@@ -48,8 +49,12 @@ def load_embeds(file_path):
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     entity_indices = [list(map(int, tree[i][0][0][0][0][0])) for i in range(len(tree))]
     
-    print('{}'.format(np.array(word_vecs).shape))
-    exit()
+    # print(words[0][6])
+    # print(words[0][7])
+    # print(words[0][8])
+    # print(words[0][9])
+    # # print('{}'.format(np.array(word_vecs).shape))
+    # exit()
     
     return word_vecs, entity_indices
 
