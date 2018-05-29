@@ -29,16 +29,16 @@ def index_data(data, entity_list, entity_indices):
     return indexing_data, fil_entity_indices, num_entities, num_relations
 
 
-def generate_corrupting_batch(batch_size, data, num_entities, corrupt_size, num_relations):
-    # sort data according to relation
-    # print('\n===== Data =====\n{}\n'.format(data))
-    sorted_data = [[T for T in data if r == T[1]] for r in range(num_relations)]
+def generate_corrupting_batch(batch_size, triples, num_entities, corrupt_size, num_relations):
+    # sort triples according to relation
+    # print('\n===== Data =====\n{}\n'.format(triples))
+    sorted_data = [[T for T in triples if r == T[1]] for r in range(num_relations)]
     # print('===== Sort Data =====\n')
     # for T in sorted_data:
     #     print('{} - number of T is {}'.format(T, len(T)))
     # random sample from relation
     batch_size = int(batch_size / num_relations)
-    # print('batch_size for sorted data: {}'.format(batch_size))
+    # print('batch_size for sorted triples: {}'.format(batch_size))
     random_data = []
     for T in sorted_data:
         if len(T) > batch_size:
@@ -57,14 +57,14 @@ def generate_corrupting_batch(batch_size, data, num_entities, corrupt_size, num_
             for i in range(corrupt_size):
                 corrupting_data.append([T[0], T[1], T[2], random.randint(0, num_entities - 1)])
 
-    # print('\nCorrupting data')
+    # print('\nCorrupting triples')
     # for T in corrupting_data:
     #     print(T)
 
-    # random_indices = random.sample(range(len(data)), batch_size)
-    # corrupting_batch = [(data[i][0],  # data[i][0] = e1
-    #                      data[i][1],  # data[i][1] = r
-    #                      data[i][2],  # data[i][2] = e2
+    # random_indices = random.sample(range(len(triples)), batch_size)
+    # corrupting_batch = [(triples[i][0],  # triples[i][0] = e1
+    #                      triples[i][1],  # triples[i][1] = r
+    #                      triples[i][2],  # triples[i][2] = e2
     #                      random.randint(0, num_entities - 1))  # random = e3 (corrupted)
     #                     for i in random_indices for _ in range(corrupt_size)]
 
@@ -74,7 +74,6 @@ def generate_corrupting_batch(batch_size, data, num_entities, corrupt_size, num_
 def split_corrupting_batch(data_batch, num_relations):
     corrupting_entities = [[] for i in range(num_relations)]
     for e1, r, e2, e3 in data_batch:
-        # corrupting_entities[r].append((e1, e2, e3))
         corrupting_entities[r].append([e1, e2, e3])
 
     return corrupting_entities

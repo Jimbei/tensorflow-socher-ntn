@@ -1,14 +1,17 @@
 import numpy as np
 import tensorflow as tf
+import os.path
+import params
+import production
+import ntn_training
 
 
 def main():
-    a = tf.constant([1, 2, 3, 4], name='a')
-    b = tf.constant(2, name='b')
-    c = a * b
-    
-    with tf.Session() as sess:
-        print(sess.run(c))
+    if os.path.exists(params.CKPT_DIR):
+        production.run_production(evaluation=False)
+    else:
+        ntn_training.run_training()
+    pass
 
 
 if __name__ == '__main__':

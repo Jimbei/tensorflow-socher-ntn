@@ -1,5 +1,5 @@
 import ntn_input
-import ntn
+import hypothesis
 import params
 import tensorflow as tf
 import numpy as np
@@ -45,13 +45,13 @@ def data_to_relation_sets(data_batch, num_relations):
 def run_evaluation():
     print('Begin evaluation process')
     print('Load data from test.txt ...')
-    test_data = ntn_input.load_test_data(params.data_path)
+    test_data = ntn_input.load_test_data(params.DATA_DIR)
     
     print('Load entity list from entities.txt ...')
-    entities_list = ntn_input.load_entities(params.data_path)
+    entities_list = ntn_input.load_entities(params.DATA_DIR)
     
     print('Load relation list from relations.txt ...')
-    relations_list = ntn_input.load_relations(params.data_path)
+    relations_list = ntn_input.load_relations(params.DATA_DIR)
     
     print('Index raw data ...')
     test_data = index_data(test_data, entities_list, relations_list)
@@ -61,7 +61,7 @@ def run_evaluation():
     num_relations = len(relations_list)
     
     slice_size = params.slice_size
-    init_word_embeds, entity_to_wordvec = ntn_input.load_init_embeds(params.data_path)
+    init_word_embeds, entity_to_wordvec = ntn_input.load_init_embeds(params.DATA_DIR)
     batches, labels = data_to_relation_sets(test_data, num_relations)
     
     with tf.Graph().as_default():
@@ -74,17 +74,17 @@ def run_evaluation():
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))
         
         print('Define hypothesis function')
-        inference = ntn.inference(batch_placeholders,
-                                  corrupt_placeholder,
-                                  init_word_embeds,
-                                  entity_to_wordvec,
-                                  num_entities,
-                                  num_relations,
-                                  slice_size,
-                                  batch_size,
-                                  True,
-                                  label_placeholders)
-        eval_correct = ntn.eval(inference)
+        inference = hypothesis.inference(batch_placeholders,
+                                         corrupt_placeholder,
+                                         init_word_embeds,
+                                         entity_to_wordvec,
+                                         num_entities,
+                                         num_relations,
+                                         slice_size,
+                                         batch_size,
+                                         True,
+                                         label_placeholders)
+        eval_correct = hypothesis.eval(inference)
         
         assert CKPT_DIR == '../output/Wordnet/Wordnet490.sess'
         print('Load checkpoint {}'.format(saved_model))
@@ -137,19 +137,19 @@ def do_eval(sess,
 
 def getThresholds():
     dev_data = ntn_input.load_dev_data()
-    entities_list = ntn_input.load_entities(params.data_path)
-    relations_list = ntn_input.load_entities(params.data_path)
+    entities_list = ntn_input.load_entities(params.DATA_DIR)
+    relations_list = ntn_input.load_entities(params.DATA_DIR)
     
     num_entities = len(entities_list)
     num_relations = len(relations_list)
     
     slice_size = params.slice_size
-    (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.data_path)
+    (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.DATA_DIR)
     
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-    predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
-                                     num_entities, num_relations, slice_size, batch_size)
+    predictions_list = hypothesis.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
+                                            num_entities, num_relations, slice_size, batch_size)
     
     min_score = tf.reduce_min(predictions_list)
     max_score = tf.reduce_max(predictions_list)
@@ -186,19 +186,19 @@ def getThresholds():
 def getPredictions():
     best_thresholds = getThresholds()
     test_data = ntn_input.load_test_data()
-    entities_list = ntn_input.load_entities(params.data_path)
-    relations_list = ntn_input.load_entities(params.data_path)
+    entities_list = ntn_input.load_entities(params.DATA_DIR)
+    relations_list = ntn_input.load_entities(params.DATA_DIR)
     
     num_entities = len(entities_list)
     num_relations = len(relations_list)
     
     slice_size = params.slice_size
-    (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.data_path)
+    (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.DATA_DIR)
     
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-    predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
-                                     num_entities, num_relations, slice_size, batch_size)
+    predictions_list = hypothesis.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
+                                            num_entities, num_relations, slice_size, batch_size)
     
     predictions = tf.zeros((test_data.shape[0], 1))
     for i in range(test_data.shape[0]):
