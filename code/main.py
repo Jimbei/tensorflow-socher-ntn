@@ -1,16 +1,22 @@
-import numpy as np
-import tensorflow as tf
 import os.path
-import params
 import production
-import ntn_training
+import training
+import evaluation
+import params
+
+MODE = 1
 
 
 def main():
     if os.path.exists(params.CKPT_DIR):
         production.run_production(evaluation=False)
     else:
-        ntn_training.run_training()
+        if MODE == 0:
+            print('\n=====Training Mode=====\n')
+            training.run_training()
+        if MODE == 1:
+            print('\n=====Evaluation Mode=====\n')
+            evaluation.run_evaluation()
     pass
 
 

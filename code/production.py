@@ -1,5 +1,5 @@
 import ntn_input
-import hypothesis
+import ntn
 import params
 import tensorflow as tf
 import numpy as np
@@ -74,17 +74,17 @@ def run_evaluation():
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))
         
         print('Define hypothesis function')
-        inference = hypothesis.inference(batch_placeholders,
-                                         corrupt_placeholder,
-                                         init_word_embeds,
-                                         entity_to_wordvec,
-                                         num_entities,
-                                         num_relations,
-                                         slice_size,
-                                         batch_size,
-                                         True,
-                                         label_placeholders)
-        eval_correct = hypothesis.eval(inference)
+        inference = ntn.inference(batch_placeholders,
+                                  corrupt_placeholder,
+                                  init_word_embeds,
+                                  entity_to_wordvec,
+                                  num_entities,
+                                  num_relations,
+                                  slice_size,
+                                  batch_size,
+                                  True,
+                                  label_placeholders)
+        eval_correct = ntn.eval(inference)
         
         assert CKPT_DIR == '../output/Wordnet/Wordnet490.sess'
         print('Load checkpoint {}'.format(saved_model))
@@ -148,8 +148,8 @@ def getThresholds():
     
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-    predictions_list = hypothesis.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
-                                            num_entities, num_relations, slice_size, batch_size)
+    predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
+                                     num_entities, num_relations, slice_size, batch_size)
     
     min_score = tf.reduce_min(predictions_list)
     max_score = tf.reduce_max(predictions_list)
@@ -197,8 +197,8 @@ def getPredictions():
     
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
-    predictions_list = hypothesis.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
-                                            num_entities, num_relations, slice_size, batch_size)
+    predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
+                                     num_entities, num_relations, slice_size, batch_size)
     
     predictions = tf.zeros((test_data.shape[0], 1))
     for i in range(test_data.shape[0]):

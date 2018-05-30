@@ -1,5 +1,9 @@
 import random
+import scipy.io as sio
 import numpy as np
+import params
+import csv
+import random
 
 
 def index_data(data, entity_list, entity_indices):
@@ -7,10 +11,10 @@ def index_data(data, entity_list, entity_indices):
     # filter entity
     fil_entity_list = random.sample(entity_list, 2000)
     # filter triple
-    data = filter_data(data, fil_entity_list)
+    data = filter_data(data, fil_entity_list, 0)
     # filter relation
     # print('original relation list: {}'.format(relation_list))
-    fil_relation_list = filter_relation(data)
+    fil_relation_list = filter_relation(data, 0)
     # print('filtering relation list: {}'.format(fil_relation_list))
     # filter entity indices
     fil_entity_indices = filter_entity_indices(entity_list, entity_indices, fil_entity_list)
@@ -30,43 +34,22 @@ def index_data(data, entity_list, entity_indices):
 
 
 def generate_corrupting_batch(batch_size, triples, num_entities, corrupt_size, num_relations):
-    # sort triples according to relation
-    # print('\n===== Data =====\n{}\n'.format(triples))
-    sorted_data = [[T for T in triples if r == T[1]] for r in range(num_relations)]
-    # print('===== Sort Data =====\n')
-    # for T in sorted_data:
-    #     print('{} - number of T is {}'.format(T, len(T)))
-    # random sample from relation
+    sorted_triples = [[T for T in triples if r == T[1]] for r in range(num_relations)]
+
     batch_size = int(batch_size / num_relations)
-    # print('batch_size for sorted triples: {}'.format(batch_size))
     random_data = []
-    for T in sorted_data:
-        if len(T) > batch_size:
-            T = random.sample(T, batch_size)
+    for t in sorted_triples:
+        if len(t) > batch_size:
+            t = random.sample(t, batch_size)
 
-        random_data.append(T)
-
-    # print('\nRandom batch')
-    # for T in random_data:
-    #     print(T)
+        random_data.append(t)
 
     # add corrupting entity
     corrupting_data = []
     for r in random_data:
-        for T in r:
+        for t in r:
             for i in range(corrupt_size):
-                corrupting_data.append([T[0], T[1], T[2], random.randint(0, num_entities - 1)])
-
-    # print('\nCorrupting triples')
-    # for T in corrupting_data:
-    #     print(T)
-
-    # random_indices = random.sample(range(len(triples)), batch_size)
-    # corrupting_batch = [(triples[i][0],  # triples[i][0] = e1
-    #                      triples[i][1],  # triples[i][1] = r
-    #                      triples[i][2],  # triples[i][2] = e2
-    #                      random.randint(0, num_entities - 1))  # random = e3 (corrupted)
-    #                     for i in random_indices for _ in range(corrupt_size)]
+                corrupting_data.append([t[0], t[1], t[2], random.randint(0, num_entities - 1)])
 
     return corrupting_data
 
@@ -90,11 +73,14 @@ def fill_feed_dict(relation_batches, train_both, placeholder_data, placeholder_l
     return feed_dict
 
 
-def filter_data(data, fil_entity_list):
+def filter_data(data, fil_entity_list, mode):
     filtering_data = []
 
     for i in range(len(data)):
-        e1, r, e2 = data[i]
+        if mode == 0:
+            e1, r, e2 = data[i]
+        if mode == 1:
+            e1, r, e2, label = data[i]
         if e1 in fil_entity_list and e2 in fil_entity_list:
             filtering_data.append(data[i])
 
@@ -122,12 +108,52 @@ def filter_entity_indices(entity_list, entity_indices, fil_entity_list):
     return fil_entity_indices
 
 
-def filter_relation(data):
+def filter_relation(triples, mode):
     filtering_relation = []
 
-    for i in data:
-        e1, r, e2 = i
+    for t in triples:
+        if mode == 0:
+            e1, r, e2 = t
+        if mode == 1:
+            e1, r, e2, label = t
         if r not in filtering_relation:
             filtering_relation.append(r)
 
     return filtering_relation
+
+
+def load_init_embeds(data_path):
+    file_path = data_path + '/initEmbed.mat'
+    mat_contents = sio.loadmat(file_path)
+    words = mat_contents['words']
+    we = mat_contents['We']
+    tree = mat_contents['tree']
+    word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
+    entity_indices = [list(map(int, tree[i][0][0][0][0][0])) for i in range(len(tree))]
+
+    return word_vecs, entity_indices
+
+
+def load_triples(data_path, mode):
+    if mode == 0:
+        data_file = open(data_path + '/train.txt')
+    elif mode == 1:
+        data_file = open(data_path + '/test.txt')
+    else:
+        data_file = open(data_path + '/production.txt')
+    data = [line.split('\t') for line in data_file.read().strip().split('\n')]
+    return np.array(data)
+
+
+def load_entities(data_path=params.DATA_DIR):
+    entities_file = open(data_path + '/entities.txt')
+    entities_list = entities_file.read().strip().split('\n')
+    entities_file.close()
+    return entities_list
+
+
+def load_relations(data_path=params.DATA_DIR):
+    relations_file = open(data_path + '/relations.txt')
+    relations_list = relations_file.read().strip().split('\n')
+    relations_file.close()
+    return relations_list

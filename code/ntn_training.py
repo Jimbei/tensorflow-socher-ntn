@@ -1,6 +1,6 @@
 import tensorflow as tf
 import ntn_input
-import hypothesis
+import ntn
 import params
 import datamanipulation as dp
 
@@ -11,7 +11,7 @@ def run_training():
     init_word_vecs, entity_indices = ntn_input.load_init_embeds(params.DATA_DIR)
     
     print('Load training data from train.txt ...')
-    triples = ntn_input.load_training_data(params.DATA_DIR)
+    triples = ntn_input.load_triples(params.DATA_DIR)
     
     print('Load entity list from entities.txt ...')
     entity_list = ntn_input.load_entities(params.DATA_DIR)
@@ -56,23 +56,23 @@ def run_training():
              for _ in range(n_relations)]
         
         print('Define hypothesis function')
-        inference = hypothesis.inference(features,
-                                         corrupting,
-                                         init_word_vecs,
-                                         fil_entity_indices,
-                                         n_entities,
-                                         n_relations,
-                                         slice_size,
-                                         batch_size,
-                                         False,
-                                         labels,
-                                         E, W, V, b, U)
+        inference = ntn.inference(features,
+                                  corrupting,
+                                  init_word_vecs,
+                                  fil_entity_indices,
+                                  n_entities,
+                                  n_relations,
+                                  slice_size,
+                                  batch_size,
+                                  False,
+                                  labels,
+                                  E, W, V, b, U)
         
         print('Define loss function')
-        loss = hypothesis.loss(inference, params.regularization)
+        loss = ntn.loss(inference, params.regularization)
         
         print('Define optimizer function')
-        optimizer = hypothesis.training(loss, params.learning_rate)
+        optimizer = ntn.training(loss, params.learning_rate)
         
         print('Initialize saver')
         saver = tf.train.Saver(tf.trainable_variables())

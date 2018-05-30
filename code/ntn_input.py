@@ -17,11 +17,6 @@ dev_string = '/dev.txt'
 
 # input: path of dataset to be used
 # output: python list of entities in dataset
-def load_entities(data_path=params.DATA_DIR):
-    entities_file = open(data_path + '/entities.txt')
-    entities_list = entities_file.read().strip().split('\n')
-    entities_file.close()
-    return entities_list
 
 
 # input: path of dataset to be used
@@ -49,20 +44,18 @@ def load_embeds(file_path):
     word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
     entity_indices = [list(map(int, tree[i][0][0][0][0][0])) for i in range(len(tree))]
     
-    # print(words[0][6])
-    # print(words[0][7])
-    # print(words[0][8])
-    # print(words[0][9])
-    # # print('{}'.format(np.array(word_vecs).shape))
-    # exit()
-    
     return word_vecs, entity_indices
 
 
-def load_training_data(data_path=params.DATA_DIR):
-    training_file = open(data_path + '/train.txt')
-    training_data = [line.split('\t') for line in training_file.read().strip().split('\n')]
-    return np.array(training_data)
+def load_triples(data_path, mode):
+    if mode == 0:
+        data_file = open(data_path + '/train.txt')
+    elif mode == 1:
+        data_file = open(data_path + '/test.txt')
+    else:
+        data_file = open(data_path + '/production.txt')
+    data = [line.split('\t') for line in data_file.read().strip().split('\n')]
+    return np.array(data)
 
 
 def load_dev_data(data_path=params.DATA_DIR):
@@ -72,7 +65,7 @@ def load_dev_data(data_path=params.DATA_DIR):
 
 
 def load_test_data(data_path=params.DATA_DIR):
-    test_file = open(data_path + '/test.txt')
-    test_data = [line.split('\t') for line in test_file.read().strip().split('\n')]
+    data_file = open(data_path + '/test.txt')
+    data = [line.split('\t') for line in data_file.read().strip().split('\n')]
     
-    return np.array(test_data)
+    return np.array(data)
