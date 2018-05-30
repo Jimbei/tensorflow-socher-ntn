@@ -17,7 +17,7 @@ def index_data(data, entities, relations):
                      entity_to_index[data[i][2]],
                      float(data[i][3]))
                     for i in range(len(data))]
-    
+
     return indexed_data
 
 
@@ -34,11 +34,11 @@ def fill_feed_dict(batches, labels, train_both, batch_placeholders, label_placeh
 def data_to_relation_sets(data_batch, num_relations):
     batches = [[] for _ in range(num_relations)]
     labels = [[] for _ in range(num_relations)]
-    
+
     for e1, r, e2, label in data_batch:
         batches[r].append((e1, e2, 1))
         labels[r].append([label])
-    
+
     return batches, labels
 
 
@@ -46,33 +46,42 @@ def run_evaluation():
     print('Begin evaluation process')
     print('Load data from test.txt ...')
     test_data = ntn_input.load_test_data(params.data_path)
-    
+
     print('Load entity list from entities.txt ...')
     entities_list = ntn_input.load_entities(params.data_path)
-    
+
     print('Load relation list from relations.txt ...')
     relations_list = ntn_input.load_relations(params.data_path)
-    
+
     print('Index raw data ...')
     test_data = index_data(test_data, entities_list, relations_list)
-    
+
     batch_size = len(test_data)
     num_entities = len(entities_list)
     num_relations = len(relations_list)
-    
+
     slice_size = params.slice_size
     init_word_embeds, entity_to_wordvec = ntn_input.load_init_embeds(params.data_path)
     batches, labels = data_to_relation_sets(test_data, num_relations)
-    
+
     with tf.Graph().as_default():
         sess = tf.Session()
-        
+
         print('Create placeholders')
         batch_placeholders = [tf.placeholder(tf.float32, shape=(None, 3)) for i in range(num_relations)]
         label_placeholders = [tf.placeholder(tf.float32, shape=(None, 1)) for i in range(num_relations)]
-        
         corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))
-        
+
+        E = tf.Variable(init_word_embeds)
+        W = [tf.Variable(tf.truncated_normal([params.embedding_size, params.embedding_size, slice_size]))
+             for _ in range(num_relations)]
+        V = [tf.Variable(tf.zeros([slice_size, 2 * params.embedding_size]))
+             for _ in range(num_relations)]
+        b = [tf.Variable(tf.zeros([slice_size, 1]))
+             for _ in range(num_relations)]
+        U = [tf.Variable(tf.ones([1, slice_size]))
+             for _ in range(num_relations)]
+
         print('Define hypothesis function')
         inference = ntn.inference(batch_placeholders,
                                   corrupt_placeholder,
@@ -83,17 +92,18 @@ def run_evaluation():
                                   slice_size,
                                   batch_size,
                                   True,
-                                  label_placeholders)
+                                  label_placeholders,
+                                  E, W, V, b, U)
         eval_correct = ntn.eval(inference)
-        
+
         assert CKPT_DIR == '../output/Wordnet/Wordnet490.sess'
         print('Load checkpoint {}'.format(saved_model))
         saver = tf.train.Saver()
         saver.restore(sess, params.output_path + saved_model + '.sess')
-        
+
         # print('Initialize variable')
         # sess.run(tf.global_variables_initializer())
-        
+
         do_eval(sess,
                 eval_correct,
                 batch_placeholders,
@@ -113,23 +123,23 @@ def do_eval(sess,
             test_labels,
             n_samples):
     true_count = 0.
-    
+
     feed_dict = fill_feed_dict(test_batches,
                                test_labels,
                                params.train_both,
                                batch_placeholders,
                                label_placeholders,
                                corrupt_placeholder)
-    
+
     score_values, labels, debug_printout = sess.run(eval_correct, feed_dict)
-    
+
     for i in range(len(score_values[0])):
         if score_values[0][i] > 0 and labels[0][i] == 1:
             true_count += 1.0
         elif score_values[0][i] < 0 and labels[0][i] == -1:
             true_count += 1.0
     precision = float(true_count) / float(n_samples)
-    
+
     print('precision: {}'.format(precision))
     sess.close()
     return precision
@@ -139,46 +149,46 @@ def getThresholds():
     dev_data = ntn_input.load_dev_data()
     entities_list = ntn_input.load_entities(params.data_path)
     relations_list = ntn_input.load_entities(params.data_path)
-    
+
     num_entities = len(entities_list)
     num_relations = len(relations_list)
-    
+
     slice_size = params.slice_size
     (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.data_path)
-    
+
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
     predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
                                      num_entities, num_relations, slice_size, batch_size)
-    
+
     min_score = tf.reduce_min(predictions_list)
     max_score = tf.reduce_max(predictions_list)
-    
+
     # initialize thresholds and accuracies
     best_thresholds = tf.zeros([params.num_relations, 1])
     best_accuracies = tf.zeros([params.num_relations, 1])
-    
+
     for i in range(params.num_relations):
         best_thresholds[i, :] = score_min
         best_accuracies[i, :] = -1
-    
+
     score = min_score
     increment = 0.01
-    
+
     while (score <= max_score):
         # iterate through relations list to find 
         for i in range(params.num_relations):
             current_relation_list = (dev_data[:, 1] == i)
             predictions = (predictions_list[current_relation_list, 0] <= score) * 2 - 1
             accuracy = tf.reduce_mean((predictions == dev_labels[current_relations_list, 0]))
-            
+
             # update threshold and accuracy
             if (accuracy > best_accuracies[i, 0]):
                 best_accuracies[i, 0] = accuracy
                 best_thresholds[i, 0] = score
-        
+
         score += increment
-    
+
     # store threshold values
     return best_thresholds
 
@@ -188,29 +198,29 @@ def getPredictions():
     test_data = ntn_input.load_test_data()
     entities_list = ntn_input.load_entities(params.data_path)
     relations_list = ntn_input.load_entities(params.data_path)
-    
+
     num_entities = len(entities_list)
     num_relations = len(relations_list)
-    
+
     slice_size = params.slice_size
     (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.data_path)
-    
+
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
     predictions_list = ntn.inference(batch_placeholder, corrupt_placeholder, init_word_embeds, entity_to_wordvec,
                                      num_entities, num_relations, slice_size, batch_size)
-    
+
     predictions = tf.zeros((test_data.shape[0], 1))
     for i in range(test_data.shape[0]):
         # get relation
         rel = test_data[i, 1]
-        
+
         # get labels based on predictions
         if predictions_list[i, 0] <= best_thresholds[rel, 0]:
             predictions[i, 0] = 1
         else:
             predictions[i, 0] = -1
-    
+
     return predictions
 
 
