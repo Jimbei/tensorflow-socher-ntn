@@ -1,5 +1,8 @@
 import random
 import numpy as np
+import ntn_input
+import params
+import csv
 
 
 def index_data(data, entity_list, entity_indices):
@@ -132,3 +135,26 @@ def filter_relation(data):
             filtering_relation.append(r)
 
     return filtering_relation
+
+
+def generate_data(mode):
+    fil_T = []
+
+    if mode == 0:
+        print('In training mode')
+    if mode == 1:
+        print('In testing mode')
+        T = list(ntn_input.load_test_data(params.data_path))
+        print('shape of T: {}'.format(np.array(T).shape))
+        R = ntn_input.load_relations(params.data_path)
+        T = [[t for t in T if r == t[1]] for r in R]
+        for t in T:
+            t = random.sample(t, 20)
+            fil_T.append(t)
+
+        with open(params.data_path + '/filtertest.txt', 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f, delimiter='\t')
+            for t in fil_T:
+                for i in t:
+                    writer.writerow(i)
+    return fil_T

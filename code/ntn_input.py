@@ -72,7 +72,8 @@ def load_dev_data(data_path=params.data_path):
 
 
 def load_test_data(data_path=params.data_path):
-    test_file = open(data_path + '/test.txt')
+    test_file = open(data_path + '/filtertest.txt')
     test_data = [line.split('\t') for line in test_file.read().strip().split('\n')]
     
-    return np.array(test_data)
+    # return np.array(test_data)
+    return test_data

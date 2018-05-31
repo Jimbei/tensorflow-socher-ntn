@@ -1,14 +1,12 @@
-import numpy as np
-import tensorflow as tf
+import params
+import evaluation
+import dataprocessing
 
 
 def main():
-    a = tf.constant([1, 2, 3, 4], name='a')
-    b = tf.constant(2, name='b')
-    c = a * b
-    
-    with tf.Session() as sess:
-        print(sess.run(c))
+    # dataprocessing.generate_data(1)
+    if params.MODE == 1:
+        evaluation.run_evaluation()
 
 
 if __name__ == '__main__':

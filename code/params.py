@@ -18,5 +18,7 @@ in_tensor_keep_normal = False
 save_per_iter = 100
 learning_rate = 0.001
 
+MODE = 1
+
 output_dir = ''
 

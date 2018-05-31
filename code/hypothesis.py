@@ -10,38 +10,39 @@ import numpy as np
 # Training
 
 # returns a (batch_size*corrupt_size, 2) vector corresponding to [g(T^i), g(T_c^i)] for all i
-def inference(features,
-              corrupt_placeholder,
-              word_vecs,
-              entity_indices,
-              num_entities,
-              num_relations,
-              slice_size,
-              batch_size,
-              is_eval,
-              label_placeholders,
-              E, W, V, b, U):
+def hypothesis(features,
+               corrupt_placeholder,
+               word_vecs,
+               entity_indices,
+               num_entities,
+               n_relations,
+               slice_size,
+               batch_size,
+               is_eval,
+               label_plah,
+               E, W, V, b, U):
     print('Convert entity_indices to tf.constant')
     tensor_entity_indices = [tf.constant(entity_i) - 1
                              for entity_i in entity_indices]
+    tensor_entity_indices = random.sample(tensor_entity_indices, 2000)
     print("Calculate tensor_embedding_entity")
-    tensor_embedding_entity = tf.stack([tf.reduce_mean(tf.gather(E, i), 0)
-                                        for i in tensor_entity_indices])
+    word_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0)
+                          for i in tensor_entity_indices])
 
     # (38696, 100)
-    print('shape of tensor_embedding_entity: ' + str(tensor_embedding_entity.get_shape()))
+    print('shape of tensor_embedding_entity: ' + str(word_vecs.get_shape()))
 
     predictions = list()
 
-    for r in range(num_relations):
+    for r in range(n_relations):
         print('#relation: {}'.format(r))
 
         # (?, 1)
         e1, e2, e3 = tf.split(tf.cast(features[r], tf.int32), 3, axis=1)
         # (100, ?)
-        e1v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e1, name='e1v' + str(r)), [1]))
-        e2v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e2, name='e2v' + str(r)), [1]))
-        e3v = tf.transpose(tf.squeeze(tf.gather(tensor_embedding_entity, e3, name='e3v' + str(r)), [1]))
+        e1v = tf.transpose(tf.squeeze(tf.gather(word_vecs, e1, name='e1v' + str(r)), [1]))
+        e2v = tf.transpose(tf.squeeze(tf.gather(word_vecs, e2, name='e2v' + str(r)), [1]))
+        e3v = tf.transpose(tf.squeeze(tf.gather(word_vecs, e3, name='e3v' + str(r)), [1]))
 
         e1v_pos = e1v
         e2v_pos = e2v
@@ -83,7 +84,7 @@ def inference(features,
         if not is_eval:
             predictions.append(tf.stack([score_pos, score_neg]))
         else:
-            predictions.append(tf.stack([score_pos, tf.reshape(label_placeholders[r], num_rel_r)]))
+            predictions.append(tf.stack([score_pos, tf.reshape(label_plah[r], num_rel_r)]))
 
     predictions = tf.concat(predictions, 1)
 
@@ -103,19 +104,6 @@ def training(loss, learning_rate):
     return tf.train.AdagradOptimizer(learning_rate).minimize(loss)
 
 
-def eval(predictions):
-    print('shape of predictions {}'.format(str(predictions.get_shape())))
-    score_values, labels = tf.split(predictions, 2, axis=0)
-    # debug tf.Print
-    debug_printout = tf.Print(score_values, [score_values, labels], message='Value of inference and labels: ')
-
-    # inference = tf.transpose(inference)
-    # inference = tf.concat((1-inference), inference)
-    # labels = ((tf.cast(tf.squeeze(tf.transpose(labels)), tf.int32))+1)/2
-    # print("inference "+str(inference.get_shape()))
-    # print("labels "+str(labels.get_shape()))
-    # get number of correct labels for the logits (if prediction is top 1 closest to actual)
-    # correct = tf.nn.in_top_k(inference, labels, 1)
-    # cast tensor to int and return number of correct labels
-    # return tf.reduce_sum(tf.cast(correct, tf.int32))
-    return score_values, labels, debug_printout
+def eval(score_values):
+    score_values, labels = tf.split(score_values, 2, axis=0)
+    return score_values, labels

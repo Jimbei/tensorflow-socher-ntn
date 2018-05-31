@@ -1,6 +1,6 @@
 import tensorflow as tf
 import ntn_input
-import ntn
+import hypothesis
 import params
 import dataprocessing
 
@@ -56,23 +56,23 @@ def run_training():
              for _ in range(num_relations)]
 
         print('Define hypothesis function')
-        inference = ntn.inference(placeholder_data,
-                                  placeholder_corrupt,
-                                  init_word_embeds,
-                                  fil_entity_indices,
-                                  num_entities,
-                                  num_relations,
-                                  slice_size,
-                                  batch_size,
-                                  False,
-                                  placeholder_label,
-                                  E, W, V, b, U)
+        inference = hypothesis.hypothesis(placeholder_data,
+                                          placeholder_corrupt,
+                                          init_word_embeds,
+                                          fil_entity_indices,
+                                          num_entities,
+                                          num_relations,
+                                          slice_size,
+                                          batch_size,
+                                          False,
+                                          placeholder_label,
+                                          E, W, V, b, U)
 
         print('Define loss function')
-        loss = ntn.loss(inference, params.regularization)
+        loss = hypothesis.loss(inference, params.regularization)
 
         print('Define optimizer function')
-        optimizer = ntn.training(loss, params.learning_rate)
+        optimizer = hypothesis.training(loss, params.learning_rate)
 
         print('Initialize saver')
         saver = tf.train.Saver(tf.trainable_variables())
