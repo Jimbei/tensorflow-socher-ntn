@@ -10,8 +10,8 @@ saved_model = 'Wordnet490'
 CKPT_DIR = params.output_path + saved_model + '.sess'
 
 
-def index_data(data, entities, relations):
-    entity_to_index = {entities[i]: i for i in range(len(entities))}
+def index_data(data, entity_list, relations):
+    entity_to_index = {entity_list[i]: i for i in range(len(entity_list))}
     relation_to_index = {relations[i]: i for i in range(len(relations))}
     indexed_data = [(entity_to_index[data[i][0]],
                      relation_to_index[data[i][1]],
@@ -169,24 +169,25 @@ def get_thresholds(batch_size):
     best_thresholds = tf.zeros([n_relations, 1])
     best_accuracies = tf.zeros([n_relations, 1])
 
-    for i in range(n_relations):
-        best_thresholds[i, :] = min_score
-        best_accuracies[i, :] = -1
+    for r in range(n_relations):
+        best_thresholds[r, :] = min_score
+        best_accuracies[r, :] = -1
 
     score = min_score
     increment = 0.01
 
     while score <= max_score:
         # iterate through relations list to find 
-        for i in range(n_relations):
-            current_relation_list = (dev_data[:, 1] == i)
+        for r in range(n_relations):
+            current_relation_list = (dev_data[:, 1] == r)
+            dev_labels = dev_data[:, 3]
             predictions = (score_values[current_relation_list, 0] <= score) * 2 - 1
-            accuracy = tf.reduce_mean((predictions == dev_labels[current_relations_list, 0]))
+            accuracy = tf.reduce_mean((predictions == dev_labels[current_relation_list, 0]))
 
             # update threshold and accuracy
-            if accuracy > best_accuracies[i, 0]:
-                best_accuracies[i, 0] = accuracy
-                best_thresholds[i, 0] = score
+            if accuracy > best_accuracies[r, 0]:
+                best_accuracies[r, 0] = accuracy
+                best_thresholds[r, 0] = score
 
         score += increment
 

@@ -29,7 +29,7 @@ def run_training():
     corrupt_size = params.corrupt_size
     slice_size = params.slice_size
 
-    print('data_size: {} - batch_size: {} - corrupt_size: {} - num_relations: {}'.format(len(train_data), batch_size,
+    print('data_size: {} - batch_size: {} - corrupt_size: {} - n_relations: {}'.format(len(train_data), batch_size,
                                                                                          corrupt_size, num_relations))
     assert int(batch_size / num_relations) > corrupt_size
 

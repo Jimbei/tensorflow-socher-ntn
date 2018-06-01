@@ -10,9 +10,9 @@ import numpy as np
 # Training
 
 # returns a (batch_size*corrupt_size, 2) vector corresponding to [g(T^i), g(T_c^i)] for all i
-def hypothesis(features,
+def hypothesis(data_plah,
                corrupt_placeholder,
-               word_vecs,
+               e_vecs,
                entity_indices,
                num_entities,
                n_relations,
@@ -26,11 +26,11 @@ def hypothesis(features,
                              for entity_i in entity_indices]
     tensor_entity_indices = random.sample(tensor_entity_indices, 2000)
     print("Calculate tensor_embedding_entity")
-    word_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0)
-                          for i in tensor_entity_indices])
+    e_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0)
+                       for i in tensor_entity_indices])
 
     # (38696, 100)
-    print('shape of tensor_embedding_entity: ' + str(word_vecs.get_shape()))
+    print('shape of tensor_embedding_entity: ' + str(e_vecs.get_shape()))
 
     predictions = list()
 
@@ -38,11 +38,11 @@ def hypothesis(features,
         print('#relation: {}'.format(r))
 
         # (?, 1)
-        e1, e2, e3 = tf.split(tf.cast(features[r], tf.int32), 3, axis=1)
+        e1, e2, e3 = tf.split(tf.cast(data_plah[r], tf.int32), 3, axis=1)
         # (100, ?)
-        e1v = tf.transpose(tf.squeeze(tf.gather(word_vecs, e1, name='e1v' + str(r)), [1]))
-        e2v = tf.transpose(tf.squeeze(tf.gather(word_vecs, e2, name='e2v' + str(r)), [1]))
-        e3v = tf.transpose(tf.squeeze(tf.gather(word_vecs, e3, name='e3v' + str(r)), [1]))
+        e1v = tf.transpose(tf.squeeze(tf.gather(e_vecs, e1, name='e1v' + str(r)), [1]))
+        e2v = tf.transpose(tf.squeeze(tf.gather(e_vecs, e2, name='e2v' + str(r)), [1]))
+        e3v = tf.transpose(tf.squeeze(tf.gather(e_vecs, e3, name='e3v' + str(r)), [1]))
 
         e1v_pos = e1v
         e2v_pos = e2v

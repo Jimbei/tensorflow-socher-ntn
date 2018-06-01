@@ -53,7 +53,7 @@ def load_embeds(file_path):
     # print(words[0][7])
     # print(words[0][8])
     # print(words[0][9])
-    # # print('{}'.format(np.array(word_vecs).shape))
+    # print('{}'.format(np.array(word_vecs).shape))
     # exit()
     
     return word_vecs, entity_indices
