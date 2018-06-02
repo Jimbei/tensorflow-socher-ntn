@@ -10,8 +10,9 @@ import datetime
 def data_to_indexed(data, entities, relations):
     entity_to_index = {entities[i] : i for i in range(len(entities))}
     relation_to_index = {relations[i] : i for i in range(len(relations))}
-    indexed_data = [(entity_to_index[data[i][0]], relation_to_index[data[i][1]],\
-            entity_to_index[data[i][2]]) for i in range(len(data))]
+    indexed_data = [(entity_to_index[data[i][0]], 
+                    relation_to_index[data[i][1]],
+                    entity_to_index[data[i][2]]) for i in range(len(data))]
     return indexed_data
 
 def get_batch(batch_size, data, num_entities, corrupt_size):
