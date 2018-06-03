@@ -69,7 +69,7 @@ def run_training():
                                           E, W, V, b, U)
 
         print('Define loss function')
-        loss = hypothesis.loss(inference, params.regularization)
+        loss, foo = hypothesis.loss(inference, params.regularization)
 
         print('Define optimizer function')
         optimizer = hypothesis.training(loss, params.learning_rate)
@@ -101,7 +101,7 @@ def run_training():
                                                       placeholder_corrupt)
 
             print('Execute computation graph')
-            _, loss_value = sess.run([optimizer, loss], feed_dict=feed_dict)
+            _, loss_value, foo_value = sess.run([optimizer, loss, foo], feed_dict=feed_dict)
 
         sess.close()
 

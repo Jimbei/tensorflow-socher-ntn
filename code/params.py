@@ -7,7 +7,7 @@ else: data_name = 'Freebase'
 data_path = '../data/'+data_name
 output_path = '../output/'+data_name+'/'
 
-num_iter = 500
+num_iter = 10
 train_both = False
 # batch_size = 20000
 corrupt_size = 5  # how many negative examples are given for each positive example?

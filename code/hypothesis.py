@@ -24,7 +24,7 @@ def hypothesis(data_plah,
     print('Convert entity_indices to tf.constant')
     tensor_entity_indices = [tf.constant(entity_i) - 1
                              for entity_i in entity_indices]
-    tensor_entity_indices = random.sample(tensor_entity_indices, 2000)
+    # tensor_entity_indices = random.sample(tensor_entity_indices, 2000)
     print("Calculate tensor_embedding_entity")
     e_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0)
                        for i in tensor_entity_indices])
@@ -81,6 +81,7 @@ def hypothesis(data_plah,
 
         score_pos = tf.reshape(tf.matmul(U[r], activation_pos), num_rel_r)
         score_neg = tf.reshape(tf.matmul(U[r], activation_neg), num_rel_r)
+
         if not is_eval:
             predictions.append(tf.stack([score_pos, score_neg]))
         else:
@@ -92,12 +93,15 @@ def hypothesis(data_plah,
 
 
 def loss(predictions, regularization):
+    # debug
+    foo = tf.Print(predictions, [predictions, tf.shape(predictions)], message='=====DEBUG: ')
+    # =========================================================================
     temp1 = tf.maximum(tf.subtract(predictions[1, :], predictions[0, :]) + 1, 0)
     temp1 = tf.reduce_sum(temp1)
     temp2 = tf.sqrt(sum([tf.reduce_sum(tf.square(var)) for var in tf.trainable_variables()]))
     temp = temp1 + (regularization * temp2)
 
-    return temp
+    return temp, foo
 
 
 def training(loss, learning_rate):
