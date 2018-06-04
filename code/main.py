@@ -2,7 +2,9 @@ import params
 import evaluation
 import dataprocessing
 import tensorflow as tf
+import random
 import production
+import numpy as np
 
 '''
     There are two kinds of vector.
@@ -14,7 +16,7 @@ import production
     
 '''
 
-slice_size = 1
+slice_size = 3
 embedding_size = 4
 n_relations = 2
 DEBUG_STR = '===== debug: '
@@ -60,32 +62,34 @@ def my_function(data_plah,
     The important point here is that "each ent_vec"
     '''
     # after transpose (4, 5)
-    e1v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e1, name='e1'), [1]))
-    e2v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e2, name='e2'), [1]))
+    e1v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e1, name='e1T'), [1]))
+    e2v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e2, name='e2T'), [1]))
 
     # num_rel_r is the number of triples for each relation
     num_rel_r = tf.expand_dims(tf.shape(e1v)[1], 0)
 
     term1 = []
-    for i in range(slice_size):
-        tmp1 = tf.matmul(e1v, W[r][:, :, i])
-        tmp2 = tf.matmul(tmp1, e2v)
-        tmp3 = tf.diag_part(tmp2)
-        term1.append(tmp3)
+    term1.append(tf.diag_part(tf.matmul(tf.matmul(tf.transpose(e1v), W[r][:, :, 0]), e2v)))
+    term1.append(tf.diag_part(tf.matmul(tf.matmul(tf.transpose(e1v), W[r][:, :, 1]), e2v)))
+    term1.append(tf.diag_part(tf.matmul(tf.matmul(tf.transpose(e1v), W[r][:, :, 2]), e2v)))
+
+    # shape of term1 is (1, 5)
+    # example values [[1620. 1620. 4212. 4212. 4212.]]
     term1 = tf.stack(term1)
 
-    term2 = tf.matmul(V[r], tf.concat([e1v, e2v], 0))
+    tmp1 = tf.concat([e1v, e2v], 0)
+    term2 = tf.matmul(V[r], tmp1)
 
     tanh_function = tf.tanh(term1 + term2 + b[r])
 
     # TODO why need reshape
-    score_value = tf.reshape(tf.matmul(U[r], tanh_function), num_rel_r)
+    score_values = tf.reshape(tf.matmul(U[r], tanh_function), num_rel_r)
     # debug
-    foo = term1
-    foo = tf.Print(foo, [tmp3], summarize=24, message='\n======== DEBUG - tmp3: ')
+    foo = tf.matmul(U[r], tanh_function)
+    foo = tf.Print(foo, [num_rel_r, tf.shape(foo), tf.shape(score_values)], summarize=40, message='\n======== DEBUG: ')
     # =====================================================================
 
-    return score_value, foo
+    return score_values, foo
 
 
 def lab():
@@ -104,16 +108,30 @@ def lab():
     U = [tf.Variable(tf.ones([1, slice_size]))
          for _ in range(n_relations)]
 
-    score_r0 = my_function(data_plah, indices, 0, E, W, V, b, U)
-    # score_r1 = my_function(data_plah, indices, 1, E, W, V, b, U)
+    score_r0, foo0 = my_function(data_plah, indices, 0, E, W, V, b, U)
+    score_r1, foo1 = my_function(data_plah, indices, 0, E, W, V, b, U)
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
-        # feed_dict = {data_plah[0]: [[0, 1], [0, 3], [2, 1]], data_plah[1]: [[2, 3], [1, 2]]}
         feed_dict = {data_plah[0]: [[0, 1], [0, 3], [2, 1], [2, 3], [1, 2]]}
 
-        score_r0 = sess.run([score_r0], feed_dict)
-        print(score_r0)
+        score_values, list_relation = [], []
+        score_r0, foo0 = sess.run([score_r0, foo0], feed_dict)
+        score_r1, foo1 = sess.run([score_r1, foo1], feed_dict)
+        score_r0 = [value * random.randint(0, 5) for value in score_r0]
+        score_r1 = [value * random.randint(0, 5) for value in score_r1]
+        
+        score_values.append(score_r0)
+        score_values.append(score_r1)
+        
+        score_values = np.array(score_values)
+        score_values = np.transpose(score_values)
+        for values in score_values:
+            values = values.tolist()
+            list_relation.append(values.index(max(values)))
+            
+        print('score_r0: {}\nscore_r1: {}\nrelation: {}'.format(score_r0, score_r1, list_relation))
+            
 
 
 def main():
