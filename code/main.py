@@ -51,6 +51,7 @@ def my_function(data_plah,
                 indices,
                 r,
                 E, W, V, b, U):
+    print('======== {}'.format(indices))
     indices = [tf.constant(i) for i in indices]
     entity_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0) for i in indices])
 
@@ -93,7 +94,10 @@ def my_function(data_plah,
 
 
 def lab():
-    indices = [[0, 1], [2], [4, 3], [0, 5, 1]]
+    indices = [[0, 1],      # entity 1
+               [2],         # entity 2
+               [4, 3],      # entity 3
+               [0, 5, 1]]   # entity 4
 
     print('Define placeholders')
     data_plah = [tf.placeholder(tf.int32, shape=(None, 2), name='batch_')]
@@ -131,7 +135,6 @@ def lab():
             list_relation.append(values.index(max(values)))
             
         print('score_r0: {}\nscore_r1: {}\nrelation: {}'.format(score_r0, score_r1, list_relation))
-            
 
 
 def main():
