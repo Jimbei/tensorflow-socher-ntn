@@ -57,14 +57,8 @@ def load_input():
     entity_list = ntn_input.load_entities(params.data_path)
     indexing_entities = {entity_list[i]: i for i in range(len(entity_list))}
     
-    triples = [['__pheasant_1', '__phasianus_colchicus_1'],
-               ['__case_9', '__frame_7']]
-    # pair_e = []
-    # for i in range(2):
-    #     pair_e = random.sample(entity_list, 2)
-    
-    triples = [[indexing_entities[triples[0][0]], indexing_entities[triples[0][1]]],
-               [indexing_entities[triples[1][0]], indexing_entities[triples[1][1]]]]
+    triples = [['__pheasant_1', '__phasianus_colchicus_1']]
+    triples = [[indexing_entities[triples[0][0]], indexing_entities[triples[0][1]]]]
     
     return triples
 
@@ -75,7 +69,6 @@ def run_production():
     print('Load input')
     triples = load_input()
     indices = [indices[triples[0][0]], indices[triples[0][1]]]
-    # relation_list = ntn_input.load_relations(params.data_path)
     n_relations = len(relation_list)
     print('List of relations: {}'.format(relation_list))
     
@@ -112,7 +105,8 @@ def run_production():
         print('Load checkpoint ' + saved_model)
         saver = tf.train.Saver()
         saver.restore(sess, params.output_path + saved_model + '.sess')
-        print('Feed {} and {}'.format(triples[0], triples[1]))
+        for t in triples:
+            print('Feed {}'.format(t))
         feed_dict = {data_plah[0]: triples}
         
         score_r0, foo0 = sess.run([score_r0, foo0], feed_dict)
@@ -170,7 +164,8 @@ def run_production():
                                        score_r8,
                                        score_r9,
                                        score_r10))
-        print('relations: {} and {}'.format(relation_list[relations[0]], relation_list[relations[1]]))
+        for r in relations:
+            print('relation: {}'.format(relation_list[r]))
 
 
 if __name__ == '__main__':
