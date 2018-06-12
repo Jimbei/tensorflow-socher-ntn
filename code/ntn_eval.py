@@ -1,4 +1,4 @@
-import ntn_input
+import datman
 import hypothesis
 import params
 import tensorflow as tf
@@ -46,13 +46,13 @@ def data_to_relation_sets(data_batch, num_relations):
 def run_evaluation():
     print('Begin evaluation process')
     print('Load data from test.txt ...')
-    test_data = ntn_input.load_test_data(params.data_path)
+    test_data = datman.load_test_data(params.data_path)
 
     print('Load entity list from entities.txt ...')
-    entities_list = ntn_input.load_entities(params.data_path)
+    entities_list = datman.load_entities(params.data_path)
 
     print('Load relation list from relations.txt ...')
-    relations_list = ntn_input.load_relations(params.data_path)
+    relations_list = datman.load_relations(params.data_path)
 
     print('Index raw data ...')
     test_data = index_data(test_data, entities_list, relations_list)
@@ -62,7 +62,7 @@ def run_evaluation():
     num_relations = len(relations_list)
 
     slice_size = params.slice_size
-    init_word_embeds, entity_to_wordvec = ntn_input.load_init_embeds(params.data_path)
+    init_word_embeds, entity_to_wordvec = datman.load_init_embeds(params.data_path)
     batches, labels = data_to_relation_sets(test_data, num_relations)
 
     with tf.Graph().as_default():
@@ -147,15 +147,15 @@ def do_eval(sess,
 
 
 def get_thresholds(batch_size):
-    dev_data = ntn_input.load_dev_data()
-    entities_list = ntn_input.load_entities(params.data_path)
-    relations_list = ntn_input.load_entities(params.data_path)
+    dev_data = datman.load_dev_data()
+    entities_list = datman.load_entities(params.data_path)
+    relations_list = datman.load_entities(params.data_path)
 
     n_entities = len(entities_list)
     n_relations = len(relations_list)
 
     slice_size = params.slice_size
-    init_word_embeds, entity_indices = ntn_input.load_init_embeds(params.data_path)
+    init_word_embeds, entity_indices = datman.load_init_embeds(params.data_path)
 
     data_plah = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_plah = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?
@@ -198,15 +198,15 @@ def get_thresholds(batch_size):
 def get_predictions(batch_size):
     best_thresholds = get_thresholds()
 
-    triples = ntn_input.load_test_data()
-    entity_list = ntn_input.load_entities(params.data_path)
-    relation_list = ntn_input.load_entities(params.data_path)
+    triples = datman.load_test_data()
+    entity_list = datman.load_entities(params.data_path)
+    relation_list = datman.load_entities(params.data_path)
 
     n_entities = len(entity_list)
     n_relations = len(relation_list)
 
     slice_size = params.slice_size
-    (init_word_embeds, entity_to_wordvec) = ntn_input.load_init_embeds(params.data_path)
+    (init_word_embeds, entity_to_wordvec) = datman.load_init_embeds(params.data_path)
 
     batch_placeholder = tf.placeholder(tf.float32, shape=(4, batch_size))
     corrupt_placeholder = tf.placeholder(tf.bool, shape=(1))  # Which of e1 or e2 to corrupt?

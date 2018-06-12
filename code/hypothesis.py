@@ -1,8 +1,5 @@
 import tensorflow as tf
 import params
-import ntn_input
-import random
-import numpy as np
 
 
 # Inference
@@ -11,101 +8,78 @@ import numpy as np
 
 # returns a (batch_size*corrupt_size, 2) vector corresponding to [g(T^i), g(T_c^i)] for all i
 def hypothesis(data_plah,
-               corrupt_placeholder,
-               e_vecs,
-               entity_indices,
-               num_entities,
+               indices,
                n_relations,
-               slice_size,
-               batch_size,
-               is_eval,
-               label_plah,
                E, W, V, b, U):
     print('Convert entity_indices to tf.constant')
-    tensor_entity_indices = [tf.constant(entity_i) - 1
-                             for entity_i in entity_indices]
-    # tensor_entity_indices = random.sample(tensor_entity_indices, 2000)
-    print("Calculate tensor_embedding_entity")
-    e_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0)
-                       for i in tensor_entity_indices])
+    indices = [tf.constant(i) - 1 for i in indices]  # one sample: indices[2] = [[[19154, 50004]]]
+    entity_vecs = tf.stack([tf.reduce_mean(tf.gather(E, i), 0) for i in indices])
+    print('======== DEBUG: number of entities is {}'.format(entity_vecs.get_shape()[0]))
 
-    # (38696, 100)
-    print('shape of tensor_embedding_entity: ' + str(e_vecs.get_shape()))
-
-    predictions = list()
+    score_values = []
 
     for r in range(n_relations):
         print('#relation: {}'.format(r))
-
-        # (?, 1)
         e1, e2, e3 = tf.split(tf.cast(data_plah[r], tf.int32), 3, axis=1)
-        # (100, ?)
-        e1v = tf.transpose(tf.squeeze(tf.gather(e_vecs, e1, name='e1v' + str(r)), [1]))
-        e2v = tf.transpose(tf.squeeze(tf.gather(e_vecs, e2, name='e2v' + str(r)), [1]))
-        e3v = tf.transpose(tf.squeeze(tf.gather(e_vecs, e3, name='e3v' + str(r)), [1]))
+        e1v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e1, name='e1v' + str(r)), [1]))
+        e2v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e2, name='e2v' + str(r)), [1]))
+        e3v = tf.transpose(tf.squeeze(tf.gather(entity_vecs, e3, name='e3v' + str(r)), [1]))
 
         e1v_pos = e1v
         e2v_pos = e2v
         e1v_neg = e1v
         e2v_neg = e3v
+        # number of triples for a single relation
         num_rel_r = tf.expand_dims(tf.shape(e1v_pos)[1], 0)
-        preactivation_pos = list()
-        preactivation_neg = list()
 
-        # print("e1v_pos: "+str(e1v_pos.get_shape()))
-        # print("W[r][:,:,slice]: "+str(W[r][:,:,0].get_shape()))
-        # print("e2v_pos: "+str(e2v_pos.get_shape()))
+        term1_pos = []
+        term1_neg = []
 
         # =====================================================================
-        # print("Starting preactivation funcs")
-        for i in range(slice_size):
-            preactivation_pos.append(tf.reduce_sum(e1v_pos * tf.matmul(W[r][:, :, i], e2v_pos), 0))
-            preactivation_neg.append(tf.reduce_sum(e1v_neg * tf.matmul(W[r][:, :, i], e2v_neg), 0))
-        # =====================================================================
+        for i in range(params.slice_size):
+            term1_pos.append(tf.diag_part(tf.matmul(tf.matmul(tf.transpose(e1v_pos), W[r][:, :, i]), e2v_pos)))
+            term1_neg.append(tf.diag_part(tf.matmul(tf.matmul(tf.transpose(e1v_neg), W[r][:, :, i]), e1v_neg)))
 
-        # =====================================================================
-        preactivation_pos = tf.stack(preactivation_pos)
-        preactivation_neg = tf.stack(preactivation_neg)
-
-        temp2_pos = tf.matmul(V[r], tf.concat([e1v_pos, e2v_pos], 0))
-        temp2_neg = tf.matmul(V[r], tf.concat([e1v_neg, e2v_neg], 0))
+        term1_pos = tf.stack(term1_pos)
+        term1_neg = tf.stack(term1_neg)
         # =====================================================================
 
         # =====================================================================
-        preactivation_pos = preactivation_pos + temp2_pos + b[r]
-        preactivation_neg = preactivation_neg + temp2_neg + b[r]
+        term2_pos = tf.matmul(V[r], tf.concat([e1v_pos, e2v_pos], 0))
+        term2_neg = tf.matmul(V[r], tf.concat([e1v_neg, e2v_neg], 0))
         # =====================================================================
 
-        activation_pos = tf.tanh(preactivation_pos)
-        activation_neg = tf.tanh(preactivation_neg)
+        # =====================================================================
+        tanh_pos = tf.tanh(term1_pos + term2_pos + b[r])
+        tanh_neg = tf.tanh(term1_neg + term2_neg + b[r])
+        # =====================================================================
 
-        score_pos = tf.reshape(tf.matmul(U[r], activation_pos), num_rel_r)
-        score_neg = tf.reshape(tf.matmul(U[r], activation_neg), num_rel_r)
+        # before:   shape(tf.matmul(U[r], tanh_pos)) == [1, 15]
+        # after:    shape(tf.matmul(U[r], tanh_pos)) == [15]
+        score_pos = tf.reshape(tf.matmul(U[r], tanh_pos), num_rel_r)
+        score_neg = tf.reshape(tf.matmul(U[r], tanh_neg), num_rel_r)
 
-        if not is_eval:
-            predictions.append(tf.stack([score_pos, score_neg]))
-        else:
-            predictions.append(tf.stack([score_pos, tf.reshape(label_plah[r], num_rel_r)]))
+        # shape(score_pos) == [15], shape(score_neg) == [15]
+        # shape(tf.stack([score_pos, score_cor])) == [2, 15]
+        score_values.append(tf.stack([score_pos, score_neg]))
 
-    predictions = tf.concat(predictions, 1)
+    score_values = tf.concat(score_values, 1)
+    foo = tf.constant(1)
 
-    return predictions
+    return score_values, foo
 
 
-def loss(predictions, regularization):
-    # debug
-    foo = tf.Print(predictions, [predictions, tf.shape(predictions)], message='=====DEBUG: ')
-    # =========================================================================
-    temp1 = tf.maximum(tf.subtract(predictions[1, :], predictions[0, :]) + 1, 0)
-    temp1 = tf.reduce_sum(temp1)
-    temp2 = tf.sqrt(sum([tf.reduce_sum(tf.square(var)) for var in tf.trainable_variables()]))
-    temp = temp1 + (regularization * temp2)
+def loss(score_values, regularization):
+    term1 = tf.reduce_sum(tf.maximum(tf.subtract(score_values[1, :], score_values[0, :]) + 1, 0))
+    term2 = tf.sqrt(sum([tf.reduce_sum(tf.square(var)) for var in tf.trainable_variables()]))
+    loss_values = term1 + (regularization * term2)
 
-    return temp, foo
+    return loss_values
 
 
 def training(loss, learning_rate):
-    return tf.train.AdagradOptimizer(learning_rate).minimize(loss)
+    return tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
+    # return tf.train.AdagradOptimizer(learning_rate).minimize(loss)
 
 
 def eval(score_values):

@@ -141,8 +141,15 @@ def main():
     # dataprocessing.generate_data(1)
     # if params.MODE == 1:
     #     evaluation.run_evaluation()
-    lab()
+    # lab()
     # production.run_production()
+
+    A = tf.constant([[1, 2, 3], [4, 5, 6]])
+    B = tf.concat(A, 1)
+    C = tf.Print(B, [A, B], summarize=6, message='======== DEBUG: ')
+
+    with tf.Session() as sess:
+        sess.run([B, C])
 
 
 if __name__ == '__main__':

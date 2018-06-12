@@ -1,10 +1,87 @@
-import random
-import numpy as np
-import csv
-import datman
+# Load entity, relation data, precomputed entity vectors based on specified database
+# Currently supports FreeBase and Wordnet data
+# Author: Dustin Doss
+
 import params
+import scipy.io as sio
+import numpy as np
+import random
+
+entities_string = '/entities.txt'
+relations_string = '/relations.txt'
+embeds_string = '/initEmbed.mat'
+training_string = '/train.txt'
+test_string = '/test.txt'
+dev_string = '/dev.txt'
 
 
+# input: path of dataset to be used
+# output: python list of entities in dataset
+def load_entities(data_path=params.data_path):
+    entities_file = open(data_path + '/entities.txt')
+    entities_list = entities_file.read().strip().split('\n')
+    entities_file.close()
+    return entities_list
+
+
+# input: path of dataset to be used
+# output: python list of relations in dataset
+def load_relations(data_path=params.data_path):
+    relations_file = open(data_path + '/relations.txt')
+    relations_list = relations_file.read().strip().split('\n')
+    relations_file.close()
+    return relations_list
+
+
+# input: path of dataset to be used
+# output: python dict from entity string->1x100 vector embedding of entity as precalculated
+def load_init_embeds(data_path=params.data_path):
+    embeds_path = data_path + embeds_string
+    return load_embeds(embeds_path)
+
+
+# input: Generic function to load embeddings from a .mat file
+def load_embeds(file_path):
+    mat_contents = sio.loadmat(file_path)
+    words = mat_contents['words']
+    we = mat_contents['We']
+    tree = mat_contents['tree']
+    word_vecs = [[we[j][i] for j in range(params.embedding_size)] for i in range(len(words[0]))]
+    entity_indices = [list(map(int, tree[i][0][0][0][0][0])) for i in range(len(tree))]
+
+    # print(words[0][6])
+    # print(words[0][7])
+    # print(words[0][8])
+    # print(words[0][9])
+    # print('{}'.format(np.array(word_vecs).shape))
+    # exit()
+
+    return word_vecs, entity_indices
+
+
+def load_training_data(data_path=params.data_path):
+    training_file = open(data_path + '/train.txt')
+    training_data = [line.split('\t') for line in training_file.read().strip().split('\n')]
+    return np.array(training_data)
+
+
+def load_dev_data(data_path=params.data_path):
+    dev_file = open(data_path + test_string)
+    dev_data = [line.split('\t') for line in dev_file.read().strip().split('\n')]
+    return np.array(dev_data)
+
+
+def load_test_data(data_path=params.data_path):
+    test_file = open(data_path + '/filtertest.txt')
+    test_data = [line.split('\t') for line in test_file.read().strip().split('\n')]
+
+    # return np.array(test_data)
+    return test_data
+
+
+# =============================================================================
+# My implementation
+# =============================================================================
 def index_data(data, entity_list, entity_indices):
     print('Sample data')
     # filter entity
@@ -144,9 +221,9 @@ def generate_data(mode):
         print('In training mode')
     if mode == 1:
         print('In testing mode')
-        T = list(datman.load_test_data(params.data_path))
+        T = list(load_test_data(params.data_path))
         print('shape of T: {}'.format(np.array(T).shape))
-        R = datman.load_relations(params.data_path)
+        R = load_relations(params.data_path)
         T = [[t for t in T if r == t[1]] for r in R]
         for t in T:
             t = random.sample(t, 20)

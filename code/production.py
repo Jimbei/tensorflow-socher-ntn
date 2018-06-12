@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as  np
 import random
 
-import ntn_input
+import datman
 import params
 
 saved_model = 'Wordnet490'
@@ -54,7 +54,7 @@ def my_function(data_plah,
 
 
 def load_input():
-    entity_list = ntn_input.load_entities(params.data_path)
+    entity_list = datman.load_entities(params.data_path)
     indexing_entities = {entity_list[i]: i for i in range(len(entity_list))}
     
     triples = [['__pheasant_1', '__phasianus_colchicus_1']]
@@ -65,7 +65,7 @@ def load_input():
 
 def run_production():
     print('Load initial embedding vectors')
-    init_word_embeds, indices = ntn_input.load_init_embeds(params.data_path)
+    init_word_embeds, indices = datman.load_init_embeds(params.data_path)
     print('Load input')
     triples = load_input()
     indices = [indices[triples[0][0]], indices[triples[0][1]]]

@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 import hypothesis
-import ntn_input
+import datman
 import params
 
 saved_model = 'Wordnet490'
@@ -45,13 +45,13 @@ def data_to_relation_sets(data_batch, num_relations):
 def run_evaluation():
     print('Begin evaluation process')
     print('Load data from test.txt ...')
-    triples = ntn_input.load_test_data(params.data_path)
+    triples = datman.load_test_data(params.data_path)
 
     print('Load entity list from entities.txt ...')
-    entities_list = ntn_input.load_entities(params.data_path)
+    entities_list = datman.load_entities(params.data_path)
 
     print('Load relation list from relations.txt ...')
-    relations_list = ntn_input.load_relations(params.data_path)
+    relations_list = datman.load_relations(params.data_path)
 
     print('Index raw data ...')
     indexing_triples = index_data(triples, entities_list, relations_list)
@@ -61,7 +61,7 @@ def run_evaluation():
     n_relations = len(relations_list)
 
     slice_size = params.slice_size
-    init_word_embeds, entity_to_wordvec = ntn_input.load_init_embeds(params.data_path)
+    init_word_embeds, entity_to_wordvec = datman.load_init_embeds(params.data_path)
     batches, labels = data_to_relation_sets(indexing_triples, n_relations)
 
     # sess = tf.Session()
